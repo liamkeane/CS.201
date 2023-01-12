@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Aaron Bauer" />
+  <meta name="dcterms.date" content="2022-01-15" />
+  <title>Lab 2: List Improvement</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        background-color: #fffcf5;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {  background-color: #fffcf5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ef2929; background-color: #fffcf5; } /* Alert */
+    code span.an { color: #8f5902; background-color: #fffcf5; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #c4a000; background-color: #fffcf5; } /* Attribute */
+    code span.bn { color: #0000cf; background-color: #fffcf5; } /* BaseN */
+    code span.cf { color: #006fe0; background-color: #fffcf5; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #d0372d; background-color: #fffcf5; } /* Char */
+    code span.cn { color: #d0372d; background-color: #fffcf5; } /* Constant */
+    code span.co { color: #8d8d84; background-color: #fffcf5; } /* Comment */
+    code span.cv { color: #8d8d84; background-color: #fffcf5; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #8d8d84; background-color: #fffcf5; font-weight: bold; font-style: italic; } /* Documentation */
+    code span.dt { color: #6434a3; background-color: #fffcf5; } /* DataType */
+    code span.dv { color: #0000cf; background-color: #fffcf5; } /* DecVal */
+    code span.er { color: #a40000; background-color: #fffcf5; font-weight: bold; } /* Error */
+    code span.ex { background-color: #fffcf5; } /* Extension */
+    code span.fl { color: #d0372d; background-color: #fffcf5; } /* Float */
+    code span.fu { color: #006699; background-color: #fffcf5; } /* Function */
+    code span.im { background-color: #fffcf5; } /* Import */
+    code span.in { color: #8f5902; background-color: #fffcf5; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #0000ff; background-color: #fffcf5; font-weight: bold; } /* Keyword */
+    code span.op { color: #006fe0; background-color: #fffcf5; font-weight: bold; } /* Operator */
+    code span.ot { color: #8f5902; background-color: #fffcf5; } /* Other */
+    code span.pp { color: #808080; background-color: #fffcf5; font-style: italic; } /* Preprocessor */
+    code span.sc { color: #000000; background-color: #fffcf5; } /* SpecialChar */
+    code span.ss { color: #4e9a06; background-color: #fffcf5; } /* SpecialString */
+    code span.st { color: #008000; background-color: #fffcf5; } /* String */
+    code span.va { color: #ba36a5; background-color: #fffcf5; } /* Variable */
+    code span.vs { color: #4e9a06; background-color: #fffcf5; } /* VerbatimString */
+    code span.wa { color: #8f5902; background-color: #fffcf5; font-weight: bold; font-style: italic; } /* Warning */
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="lab-style.css" />
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+  <link rel="apple-touch-icon" sizes="180x180" href="./media/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="./media/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="./media/favicon-16x16.png">
+  <link rel="manifest" href="./media/site.webmanifest">
+
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Lab 2: List Improvement</h1>
+<p class="author">Aaron Bauer</p>
+<p class="date">January 15, 2022</p>
+</header>
+<!-- pandoc -s -c lab-style.css -H lab-header.html --highlight-style highlight-style.theme lab2.md -o lab2.html -->
+<div class="wrapper">
+<h1 id="lab-2-list-improvement1">Lab 2: List Improvement<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></h1>
+<ul>
+<li><strong>Assigned:</strong> Monday, January 17</li>
+<li><strong>Check-in Post:</strong> Before 9pm Thursday, January 20 (<a href="https://moodle.carleton.edu/mod/forum/view.php?id=719088">check-in forum</a>)</li>
+<li><strong>Due:</strong> 9pm Monday, January 24</li>
+<li><strong>Collaboration:</strong> Individual assignment</li>
+<li><strong>Handout:</strong> <a href="./handouts/lab2-handout.zip">starter project</a></li>
+<li><strong>Submit:</strong> Upload <code>DoublyLinkedList.java</code> to <a href="https://moodle.carleton.edu/mod/assign/view.php?id=719077">Lab 2</a></li>
+<li><strong>Reference:</strong>
+<ul>
+<li><a href="./notes/linked-list-1.html">Linked List I</a></li>
+<li><a href="./notes/linked-list-2.html">Linked List II</a></li>
+</ul></li>
+</ul>
+<h2 id="overview">Overview</h2>
+<p>The central purpose of this week’s lab is to give you some hands-on experience writing code that manipulates a linked structure. You will start with already working code (a class called <code>DoublyLinkedList</code> that implements a doubly-linked list as was covered in the notes linked above). The goal is to simplify the code by adding two <em>dummy</em> nodes to your <code>DoublyLinkedList</code> in order to simplify the implementations of many of the class methods. The lab writeup below walks you through this process—you will have the best experience if you follow the instructions in this description carefully!</p>
+<h2 id="preparatory-exercises">Preparatory Exercises</h2>
+<ol type="1">
+<li>If you haven’t already, work through the <a href="https://cs.carleton.edu/faculty/awb/cs201/w22/notes/linked-list-2.html#orgba0f932">practice problems</a> from the Linked List II topic.</li>
+<li>Watch the introductory video. Follow along to make sure you have the Checkstyle for Java extension installed and know how to run the tests for the lab.</li>
+</ol>
+<h3 id="introductory-video">Introductory Video</h3>
+<p><a href="https://carleton.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=ecc58637-843f-4437-afc5-acb20186e6f9">Panopto viewer link</a></p>
+<iframe src="https://carleton.hosted.panopto.com/Panopto/Pages/Embed.aspx?id=ecc58637-843f-4437-afc5-acb20186e6f9&amp;autoplay=false&amp;offerviewer=true&amp;showtitle=true&amp;showbrand=false&amp;start=0&amp;interactivity=all" height="563" width="1000" style="border: 1px solid #464646;" allowfullscreen allow="autoplay">
+</iframe>
+<h2 id="suggested-timeline">Suggested Timeline</h2>
+<ul>
+<li><a href="#preparatory-exercises">Preparatory Exercises</a> and steps 1 and 2 of <a href="#procedure">Procedure</a> by Wednesday</li>
+<li>Steps 3 to 7 of <a href="#procedure">Procedure</a> by Friday</li>
+<li>Steps 8 to 11 of <a href="#procedure">Procedure</a> by 9pm Monday</li>
+</ul>
+<h2 id="discussion">Discussion</h2>
+<p>Anyone attempting to understand the workings of a doubly-linked list understands that it is potentially difficult to keep track of the references. One of the problems with writing code associated with linked structures is that there are frequently <em>boundary cases</em>. These are special cases that must be handled carefully because the <em>typical</em> path through the code makes an assumption that does not hold in the special case. Take, for example, the <code>addFirst</code> method in <code>DoublyLinkedList.java</code>:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode java"><code class="sourceCode java"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>    <span class="co">/**</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>     <span class="co">*</span> Add a value to the head of the list<span class="co">.</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>     <span class="co">*</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>     <span class="co">*</span> <span class="co">@</span>pre value is not null</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>     <span class="co">*</span> <span class="co">@</span>post adds element to head of list</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>     <span class="co">*</span> </span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>     <span class="co">*</span> <span class="co">@</span>param value The value to be added<span class="co">.</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>     <span class="co">*/</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> <span class="dt">void</span> <span class="fu">addFirst</span><span class="op">(</span>E value<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>        <span class="co">// construct a new element, making it the head</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>        head <span class="op">=</span> <span class="kw">new</span> <span class="fu">ListNode</span><span class="op">(</span>value<span class="op">,</span> <span class="kw">null</span><span class="op">,</span> head<span class="op">);</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>        <span class="co">// fix tail, if necessary</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(</span>tail <span class="op">==</span> <span class="kw">null</span><span class="op">)</span> tail <span class="op">=</span> head<span class="op">;</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>        count<span class="op">++;</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span></code></pre></div>
+<p>The presence of the <code>if</code> statement suggests that sometimes the code must reassign the value of the tail reference. Indeed, if the list is empty, the first element must give an initial non-<code>null</code> value to <code>tail</code>. Keeping track of the various special cases associated with a structure can be very time consuming and error-prone. One way that the complexity of the code can be reduced is to introduce dummy nodes. Usually, there is one dummy node associated with each external reference associated with the structure. In the <code>DoublyLinkedList</code>, for example, we have two references (<code>head</code> and <code>tail</code>); both will refer to a dedicated dummy node:</p>
+<p><img src="./media/lab2/dummy-example.png" /></p>
+<p>These nodes appear to the code to be normal elements of the list. In fact, they do not hold any useful data. They are completely hidden by the abstraction of the data structure. They are <em>transparent</em>. This means that from the perspective of someone calling the list’s public methods, the dummy nodes don’t exist—they aren’t counted for <code>size</code> or <code>isEmpty</code>, their values aren’t returned by <code>getFirst</code> or <code>getLast</code>, etc. They serve an entirely <em>internal</em> purpose to simplify the implementation of the data structure.</p>
+<p>Because most of the boundary cases are associated with maintaining the correct values of external references and because these external references are now <em>hidden</em> behind their respective dummy nodes, most of the method code is simplified. This comes at some cost: the dummy nodes take a small amount of space, and they must be explicitly stepped over if we work at either end of the list. On the other hand, the total amount of code to be written is likely to be reduced, and the running time of many methods decreases if the special condition testing would have been expensive.</p>
+<h2 id="procedure">Procedure</h2>
+<p>In this lab we will modify the <code>DoublyLinkedList</code> class to make use of two dummy nodes: one at the head of the list, and one at the end.</p>
+<ol type="1">
+<li>Download the starter project (<a href="./handouts/lab2-handout.zip">lab2-handout.zip</a>). Unzip it and make sure the files are in their own folder. Open the folder in VS Code.</li>
+<li>First, note that the constructor for the inner <code>ListNode</code> class takes a value and two references—the nodes that are to be next and previous to the new node. That constructor will also update the next and previous nodes to refer to the newly constructed node.</li>
+<li>Replace the constructor for the <code>DoublyLinkedList</code>. Instead of initializing <code>head</code> and <code>tail</code> references that are <code>null</code>, you should construct two dummy nodes; one node is referred to by <code>head</code> and the other by <code>tail</code>. Remember that dummy nodes are normal instances of <code>ListNode</code>, just without values. You can use <code>null</code> for the values of these nodes. These dummy nodes should point to each other in the natural way. Because these dummy nodes replace the <code>null</code> references of the <code>DoublyLinkedList</code> class, we will not see any need for <code>null</code> values in the rest of the code. Amen.</li>
+<li>Check and make any necessary modifications to <code>size</code>, <code>isEmpty</code>, and <code>clear</code>.</li>
+<li>Now, implement the two important <code>private</code> methods. The method <code>insertAfter</code> takes a value and a reference to a node, <code>previous</code>. It inserts a new node with the value <code>value</code> that directly follows <code>previous</code>. It should be declared <code>private</code> because we are not interested in making it a formal feature of the class. The <code>remove</code> method takes a reference to a node. It should unlink the node from the linked list and return the value stored in the node. You should, of course, assume that the node removed is not one of the dummy nodes. These two methods should be simple with no <code>if</code> statements.</li>
+<li>The third and final <code>private</code> method, <code>find</code>, takes an index and returns the node located at that index in the list.</li>
+<li>Using <code>insertAfter</code> and <code>remove</code>, replace the code for <code>addFirst</code>, <code>addLast</code>, <code>getFirst</code>, <code>getLast</code>, <code>removeFirst</code>, and <code>removeLast</code>. These methods should be very simple (perhaps one line each), not counting the check of whether the list is empty for the later four.</li>
+<li>Next, replace the code for the indexed versions of methods <code>add</code>, <code>remove</code>, <code>get</code>, and <code>set</code>. Each of these should make use of methods you have already written, including <code>find</code>. They should work without any special <code>if</code> statements.</li>
+<li>Replace the versions of methods <code>indexOf</code>, <code>lastIndexOf</code>, and <code>contains</code> and the <code>remove</code> method that takes a value. Each of these searches for a value in the list and then returns something based on what it finds. You will find that these methods no longer need to compare to <code>null</code>—instead you can check whether you’re at the beginning or end of the list by comparing to <code>head</code> or <code>tail</code>.</li>
+<li>Update the <code>toString</code> method to appropriately use the dummy nodes.</li>
+<li>Re-run the tests (see the <a href="#introductory-video">Introductory Video</a> for how to do this) and make sure they all still pass. The names of the test cases give a good indication of what’s being tested.</li>
+<li>For an optional challenge, uncomment <code>testInsertAtEndIsEfficient</code> and <code>testInsertNearEndIsEfficient</code> and get them to pass (these two tests will not be part of your grade).</li>
+</ol>
+<h2 id="style">Style</h2>
+<p>For this lab we will be fairly lenient on style grading, and become more strict later on in the course. You are expected to submit a <code>DoublyLinkedList.java</code> that contains no <code>checkstyle</code> <em>errors</em>. In particular, you must fill out the header comment at the top of <code>DoublyLinkedList.java</code> with your name, email, and a (brief) description of your code. You must also make sure to declare all fields of <code>DoublyLinkedList</code> <code>private</code>.</p>
+<p>It is ok to have <code>checkstyle</code> warnings in your submitted code, though I encourage you to fix them if you have time. Avoiding these warnings will be part of your grade on future labs.</p>
+<h2 id="grading">Grading</h2>
+<p>This lab will be graded out of 30 points as follows:</p>
+<table>
+<colgroup>
+<col style="width: 90%" />
+<col style="width: 9%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Requirement</th>
+<th>Points</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Test cases in <code>TestLinkedList.java</code></td>
+<td>10 points</td>
+</tr>
+<tr class="even">
+<td><code>private</code> helper methods <code>insertAfter</code>, <code>remove</code>, and <code>find</code> are used whenever possible</td>
+<td>5 points</td>
+</tr>
+<tr class="odd">
+<td><code>DoublyLinkedList.java</code> produces no <code>checkstyle</code> errors</td>
+<td>4 points</td>
+</tr>
+<tr class="even">
+<td>No comparisons to <code>null</code> anywhere outside of <code>ListNode</code> constructor</td>
+<td>4 points</td>
+</tr>
+<tr class="odd">
+<td>No <code>if</code> statements unrelated to throwing an exception in <code>get</code>, <code>set</code>, or any <code>add</code> or <code>remove</code> method (except <code>remove</code> that takes a value)</td>
+<td>3.5 points</td>
+</tr>
+<tr class="even">
+<td>Check-in post</td>
+<td>1.5 points</td>
+</tr>
+<tr class="odd">
+<td><code>DoublyLinkedList.java</code> compiles without warnings</td>
+<td>1 points</td>
+</tr>
+<tr class="even">
+<td>Correct submission format (a file named <code>DoublyLinkedList.java</code>)</td>
+<td>1 point</td>
+</tr>
+</tbody>
+</table>
+<section class="footnotes" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1" role="doc-endnote"><p>Adapted from Laboratory 9.10 in <em>Java Structures</em>, Duane Bailey<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+</body>
+</html>

@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Aaron Bauer" />
+  <meta name="dcterms.date" content="2021-01-30" />
+  <title>Lab 4: Boggle Word Finder</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        background-color: #fffcf5;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {  background-color: #fffcf5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ef2929; background-color: #fffcf5; } /* Alert */
+    code span.an { color: #8f5902; background-color: #fffcf5; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #c4a000; background-color: #fffcf5; } /* Attribute */
+    code span.bn { color: #0000cf; background-color: #fffcf5; } /* BaseN */
+    code span.cf { color: #006fe0; background-color: #fffcf5; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #d0372d; background-color: #fffcf5; } /* Char */
+    code span.cn { color: #d0372d; background-color: #fffcf5; } /* Constant */
+    code span.co { color: #8d8d84; background-color: #fffcf5; } /* Comment */
+    code span.cv { color: #8d8d84; background-color: #fffcf5; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #8d8d84; background-color: #fffcf5; font-weight: bold; font-style: italic; } /* Documentation */
+    code span.dt { color: #6434a3; background-color: #fffcf5; } /* DataType */
+    code span.dv { color: #0000cf; background-color: #fffcf5; } /* DecVal */
+    code span.er { color: #a40000; background-color: #fffcf5; font-weight: bold; } /* Error */
+    code span.ex { background-color: #fffcf5; } /* Extension */
+    code span.fl { color: #d0372d; background-color: #fffcf5; } /* Float */
+    code span.fu { color: #006699; background-color: #fffcf5; } /* Function */
+    code span.im { background-color: #fffcf5; } /* Import */
+    code span.in { color: #8f5902; background-color: #fffcf5; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #0000ff; background-color: #fffcf5; font-weight: bold; } /* Keyword */
+    code span.op { color: #006fe0; background-color: #fffcf5; font-weight: bold; } /* Operator */
+    code span.ot { color: #8f5902; background-color: #fffcf5; } /* Other */
+    code span.pp { color: #808080; background-color: #fffcf5; font-style: italic; } /* Preprocessor */
+    code span.sc { color: #000000; background-color: #fffcf5; } /* SpecialChar */
+    code span.ss { color: #4e9a06; background-color: #fffcf5; } /* SpecialString */
+    code span.st { color: #008000; background-color: #fffcf5; } /* String */
+    code span.va { color: #ba36a5; background-color: #fffcf5; } /* Variable */
+    code span.vs { color: #4e9a06; background-color: #fffcf5; } /* VerbatimString */
+    code span.wa { color: #8f5902; background-color: #fffcf5; font-weight: bold; font-style: italic; } /* Warning */
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="lab-style.css" />
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+  <link rel="apple-touch-icon" sizes="180x180" href="./media/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="./media/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="./media/favicon-16x16.png">
+  <link rel="manifest" href="./media/site.webmanifest">
+
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Lab 4: Boggle Word Finder</h1>
+<p class="author">Aaron Bauer</p>
+<p class="date">January 30, 2021</p>
+</header>
+<!-- pandoc -s -c lab-style.css -H lab-header.html --highlight-style highlight-style.theme lab4.md -o lab4.html -->
+<div class="wrapper">
+<h1 id="lab-4-boggle-word-finder1">Lab 4: Boggle Word Finder<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></h1>
+<ul>
+<li><strong>Assigned:</strong> Monday, January 31</li>
+<li><strong>Check-in Post:</strong> Before 9pm Wednesday, February 2 (<a href="https://moodle.carleton.edu/mod/forum/view.php?id=719092">check-in forum</a>)</li>
+<li><strong>Due:</strong> 9pm Friday, February 5</li>
+<li><strong>Collaboration:</strong> Individual assignment</li>
+<li><strong>Handout:</strong> <a href="./handouts/lab4-handout.zip">starter project</a></li>
+<li><strong>Submit:</strong> Upload <code>BoggleSolver.java</code> to <a href="https://moodle.carleton.edu/mod/assign/view.php?id=719079">Lab 4</a>.</li>
+<li><strong>Reference:</strong>
+<ul>
+<li><a href="https://cs.carleton.edu/faculty/awb/cs201/w21/notes/searching.html">Searching</a></li>
+</ul></li>
+</ul>
+<h2 id="overview">Overview</h2>
+<p>In this lab you will implement a method to find words on a Boggle game board. Boggle is a word game designed by Allan Turoff and distributed by Hasbro. It involves a board made up of 16 cubic dice, where each die has a letter printed on each of its 6 sides. At the beginning of the game, the 16 dice are shaken and randomly distributed into a 4-by-4 tray, with only the top sides of the dice visible. The players compete to accumulate points by building valid words from the dice, according to these rules:</p>
+<ul>
+<li>A valid word must be composed by following a sequence of adjacent dice—two dice are adjacent if they are horizontal, vertical, or diagonal neighbors.</li>
+<li>A valid word can use each die at most once.</li>
+<li>A valid word must contain at least 3 letters.</li>
+<li>A valid word must be in the dictionary (which typically does not contain proper nouns).</li>
+</ul>
+<p>Here are some examples of valid and invalid words:</p>
+<div class="image-grid">
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><img src="./media/lab4/pins.png" /> <br>PINS <br>(<em>valid</em>)</td>
+<td style="text-align: center;"><img src="./media/lab4/pines.png" /> <br>PINES <br>(<em>valid</em>)</td>
+<td style="text-align: center;"><img src="./media/lab4/dates.png" /> <br>DATES <br>(<em>invalid—dice not adjacent</em>)</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><img src="./media/lab4/pint.png" /> <br>PINT <br>(<em>invalid—path not sequential</em>)</td>
+<td style="text-align: center;"><img src="./media/lab4/tepee.png" /> <br>TEPEE <br>(<em>invalid—die used more than once</em>)</td>
+<td style="text-align: center;"><img src="./media/lab4/sid.png" /> <br>SID <br>(<em>invalid—word not in dictionary</em>)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The goals for this lab are</p>
+<ul>
+<li>Practice implementing a recursive backtracking algorithm</li>
+<li>Practice elements of recursion including base case, recursive case, and a recursive helper method</li>
+<li>Play some Boggle :)</li>
+</ul>
+<h2 id="preparatory-exercises">Preparatory Exercises</h2>
+<ol type="1">
+<li>Read the rest of this writeup. Plan out on paper the basic pieces of your recursive backtracking algorithm:
+<ul>
+<li>What parameters will your recursive helper method take?</li>
+<li>What will its base case be?</li>
+<li>What will its recursive case be?</li>
+<li>How will the helper method be called from <code>getAllValidWords</code>?</li>
+<li>How will you know when to add something to the list of words?</li>
+<li>What choice will you make (and undo) in the recursive case?</li>
+<li>How will you use the methods of the <code>BoggleBoard</code> object? (It is likely you will need to use all of those listed <a href="#discussion">Discussion</a>)</li>
+</ul></li>
+<li>Download the <a href="./handouts/lab4-handout.zip">starter project</a>, unzip it into its own folder, and open that folder in VS Code. In addition to the usual configuration files and the <code>.java</code> files for the lab, the starter project contains a number of text files (<code>.txt</code>) for Boggle boards and dictionaries. You shouldn’t need to do anything with these (some are used by the tests).</li>
+<li>Run <code>BoggleGame.java</code> to make sure the provided components of the game work. You should see a Boggle board, a timer, and a place to enter words. You won’t be able to enter any words yet because your task is to implement the method that finds the legal words.</li>
+</ol>
+<h2 id="discussion">Discussion</h2>
+<p>All the components of the Boggle game except the method to find valid words are provided to you. Your task is to implement the</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode java"><code class="sourceCode java"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span> <span class="bu">Set</span><span class="op">&lt;</span><span class="bu">String</span><span class="op">&gt;</span> <span class="fu">getAllValidWords</span><span class="op">(</span>BoggleBoard board<span class="op">)</span></span></code></pre></div>
+<p>method in <code>BoggleSolver.java</code>. To know which sequences of letters are valid words, you need a dictionary. This is set up by the provided <code>BoggleSolver</code> constructor. Specifically, the class has a field <code>dictionary</code> that is a <code>Set</code> of the words in the dictionary.</p>
+<p>A <code>Set</code> is a Java interface for a collection that contains no duplicate elements. For your purposes in this lab, you only need to use two of its methods:</p>
+<ul>
+<li><code>add(String s)</code>: adds <code>s</code> to the set, doing nothing if the string is already in the set</li>
+<li><code>contains(String s)</code>: returns <code>true</code> if <code>s</code> is present in the set</li>
+</ul>
+<p>The <code>getAllValidWords</code> method you’re implementing returns a <code>Set</code> of strings containing all the words that can be made using <code>board</code> following the rules given in <a href="#overview">Overview</a>. The starter code creates a <code>HashSet</code> object for you add words to and return. A <code>HashSet</code> implements the <code>Set</code> interface using the hashing technique we’re learning about this week.</p>
+<h3 id="boggleboard"><code>BoggleBoard</code></h3>
+<p>You are provided with <code>BoggleBoard.java</code> for representing Boggle boards. Importantly for your purposes, it provides methods for getting the size of the board and the letter at each location and for keeping track of what locations have been used as part of a word. Here is the relevant API:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode java"><code class="sourceCode java"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>    <span class="co">/**</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>     <span class="co">*</span> Returns the number of rows<span class="co">.</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>     <span class="co">*</span> <span class="co">@</span>return number of rows</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>     <span class="co">*/</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> <span class="dt">int</span> <span class="fu">rows</span><span class="op">()</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">/**</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>     <span class="co">*</span> Returns the number of columns<span class="co">.</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>     <span class="co">*</span> <span class="co">@</span>return number of columns</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>     <span class="co">*/</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> <span class="dt">int</span> <span class="fu">cols</span><span class="op">()</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="co">/**</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>     <span class="co">*</span> Returns the letter in row i and column j<span class="co">.</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>     <span class="co">*</span> <span class="co">@</span>param i the row</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>     <span class="co">*</span> <span class="co">@</span>param j the column</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>     <span class="co">*</span> <span class="co">@</span>return a String version of the letter in row i and column j<span class="co">,</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>     <span class="co">*</span>         returning <span class="co">&quot;</span>Qu<span class="co">&quot;</span> when the letter is <span class="co">&#39;</span>Q<span class="co">&#39;</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>     <span class="co">*/</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> <span class="bu">String</span> <span class="fu">getLetter</span><span class="op">(</span><span class="dt">int</span> i<span class="op">,</span> <span class="dt">int</span> j<span class="op">)</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    <span class="co">/**</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>     <span class="co">*</span> Marks the location at row i and column j as visited<span class="co">.</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>     <span class="co">*</span> <span class="co">@</span>param i the row</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>     <span class="co">*</span> <span class="co">@</span>param j the column</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>     <span class="co">*/</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> <span class="dt">void</span> <span class="fu">visit</span><span class="op">(</span><span class="dt">int</span> i<span class="op">,</span> <span class="dt">int</span> j<span class="op">)</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>    <span class="co">/**</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>     <span class="co">*</span> Marks the location at row i and column j as not visited<span class="co">.</span></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>     <span class="co">*</span> <span class="co">@</span>param i the row</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>     <span class="co">*</span> <span class="co">@</span>param j the column</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>     <span class="co">*/</span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> <span class="dt">void</span> <span class="fu">unvisit</span><span class="op">(</span><span class="dt">int</span> i<span class="op">,</span> <span class="dt">int</span> j<span class="op">)</span></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>    <span class="co">/**</span></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>     <span class="co">*</span> Checks if the location at row i and column j is visited<span class="co">.</span></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>     <span class="co">*</span> <span class="co">@</span>param i the row</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>     <span class="co">*</span> <span class="co">@</span>param j the column</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>     <span class="co">*</span> <span class="co">@</span>return true if the location is marked as visited</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>     <span class="co">*/</span></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> <span class="dt">boolean</span> <span class="fu">isVisited</span><span class="op">(</span><span class="dt">int</span> i<span class="op">,</span> <span class="dt">int</span> j<span class="op">)</span></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>    <span class="co">/**</span></span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>     <span class="co">*</span> Checks if all locations are visited<span class="co">.</span></span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>     <span class="co">*</span> <span class="co">@</span>return true if all locations are marked as visited</span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>     <span class="co">*/</span></span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> <span class="dt">boolean</span> <span class="fu">allVisited</span><span class="op">()</span></span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>    <span class="co">/**</span></span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>     <span class="co">*</span> Checks if the location at row i and column j is a valid board location<span class="co">.</span></span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>     <span class="co">*</span> <span class="co">@</span>param i the row</span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>     <span class="co">*</span> <span class="co">@</span>param j the column</span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>     <span class="co">*</span> <span class="co">@</span>return true is the location is a valid board location</span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>     <span class="co">*/</span></span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> <span class="dt">boolean</span> <span class="fu">isValidLocation</span><span class="op">(</span><span class="dt">int</span> i<span class="op">,</span> <span class="dt">int</span> j<span class="op">)</span></span></code></pre></div>
+<h2 id="procedure">Procedure</h2>
+<p>You are free to implement finding valid words in any <em>recursive</em> way you see fit. That said, I strongly recommend using a recursive backtracking approach. I outline one possible such approach below.</p>
+<p>Searching for a word on a Boggle board follows this basic process:</p>
+<ol type="1">
+<li>Select a location to start with</li>
+<li>Try tracing out paths through adjacent locations, never using a location more than once</li>
+<li>If the letters you’ve encountered form a word in the dictionary, add it to the list of words</li>
+</ol>
+<p>To perform this search there are a some of things you need to keep track of:</p>
+<ul>
+<li>The board location you are currently on</li>
+<li>The letters you’ve encountered so far</li>
+<li>The locations you’ve already used</li>
+</ul>
+<p>Since <code>getAllValidWords</code> only takes a board as a parameter, it won’t be able to recursively keep track of all of these. So you might implement a recursive helper method that does:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode java"><code class="sourceCode java"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">private</span> <span class="dt">void</span> <span class="fu">getAllValidWordsHelper</span><span class="op">(</span>BoggleBoard board<span class="op">,</span> <span class="bu">Set</span><span class="op">&lt;</span><span class="bu">String</span><span class="op">&gt;</span> words<span class="op">,</span> </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                                    <span class="bu">String</span> wordSoFar<span class="op">,</span> <span class="dt">int</span> row<span class="op">,</span> <span class="dt">int</span> col<span class="op">)</span></span></code></pre></div>
+<ul>
+<li><code>row</code> and <code>col</code> are the current board location.</li>
+<li><code>wordSoFar</code> is a string of the letters you’ve encountered.</li>
+<li><code>words</code> is the set of words created in <code>getAllValidWords</code> (our helper method needs to add words to it, so we pass it as a parameter).</li>
+<li>Conveniently, <code>board</code> itself can keep track of where you’ve visited using the <code>visit(int i, int j)</code>, <code>isVisited(int i, int j)</code>, and <code>unvisit(int i, int j)</code> methods.</li>
+</ul>
+<p>This helper method will search for words starting at location (<code>row</code>, <code>col</code>), adding on letters it encounters to <code>wordSoFar</code>. Each recursive call is exploring the possible choices of next location to visit. To find all the words on a board, you need to start a search from each board location. This you can handle in <code>getAllValidWords</code>: loop over all board locations (use <code>board.rows()</code> and <code>board.cols()</code> to get the size of the board) and call <code>getAllValidWordsHelper</code> to start a search at each one.</p>
+<p>How will you know if a word is in the dictionary? Use the <code>contains</code> method of the <code>dictionary</code> field: <code>dictionary.contains(wordSoFar)</code>.</p>
+<p>How will you “trace out paths through adjacent locations”? If you are at location (<code>1</code>, <code>1</code>) of a 4-by-4 board, there are eight possible adjacent locations:</p>
+<div class="centered">
+<p><img src="./media/lab4/adjacent.png" style="width: 50%;" /></p>
+</div>
+<p>Note that the coordinates of the adjacent locations involve adding or subtracing 1 from the current row and/or column. Thus, we can nicely express these using nested for loops from <code>row - 1</code> to <code>row + 1</code> and from <code>col - 1</code> to <code>col + 1</code> where (<code>row</code>, <code>col</code>) is the current location. Of course, this will sometimes result in locations that are off the sides of the board. You can use <code>board.isValidLocation</code> to skip these.</p>
+<p>An important part of recursive backtracking is stopping the search when you reach a dead end. In Boggle, a search has reached a dead end if the letters you’ve encountered so far (<code>wordSoFar</code>) don’t lead to any word in the dictionary. For example, if <code>wordSoFar</code> is <code>"TX"</code>, there’s no point to exploring further because no word in the dictionary begins with <code>"TX"</code>. One term for letters at the start of a word is <em>prefix</em>. <code>BoggleSolver</code> has a <code>Set&lt;String&gt;</code> field <code>prefixes</code> that contains all the prefixes to every word in the dictionary. For example, if the dictionary contains the word <code>"DATA"</code>, <code>prefixes</code> will contain <code>"D"</code>, <code>"DA"</code>, and <code>"DAT"</code>. You should only make a recursive call if <code>prefixes.contains(wordSoFar)</code>.</p>
+<p>Like other examples of recursive backtracking we’ve seen, the code you need to write doesn’t take very many lines (likely no more than 15 or 20 in any one method). That doesn’t mean it’s easy or obvious, however. Planning out ahead of time (step 1 of <a href="#preparatory-exercises">Preparatory Exercises</a>) will be very helpful.</p>
+<h2 id="testing">Testing</h2>
+<p>Of the 11 JUnit tests provided with the starter project, only 2 (<code>findsSomeWordsTest</code> and <code>findsAllWordsTest</code>) are part of your grade (see <a href="#grading">Grading</a>). The others are intended to help you debug if the graded ones are failing. I have tried to give these tests useful error messages when they fail.</p>
+<p>There is one testing situation to be aware of. If you do not use <code>prefixes</code> to avoid searching dead ends, as described in <a href="#procedure">Procedure</a>, your code will make an enormous amount of recursive calls. All the tests have a 2 second time limit, which should prevent running the tests from freezing VS Code in most cases. I have observed, however, that if I run all the tests at once with a print statement in my recursive method that doesn’t stop at dead ends, it causes VS Code to freeze. If you are debugging with print statements, take care to run just one test at a time.</p>
+<h2 id="style">Style</h2>
+<p>You are expected to submit a <code>BoggleSolver.java</code> that contains no <code>checkstyle</code> <em>errors</em>. It is ok to have <code>checkstyle</code> warnings in your submitted code, though I encourage you to fix them if you have time. Avoiding these warnings will become part of your grade on future labs.</p>
+<p>You should ignore all Java warnings in <code>BoggleBoard.java</code> and <code>BoggleGame.java</code>.</p>
+<h2 id="grading">Grading</h2>
+<p>This lab will be graded out of 30 points as shown below. While most of the points for this lab are associated with specific test cases, partial credit can be earned for test cases that don’t pass. It it possible to earn a passing graded even if your submission does not pass any tests. Partial credit will be awarded based on evidence of a good-faith effort to implement the related features. Comments explaining your approach can help earn partial credit.</p>
+<table>
+<thead>
+<tr class="header">
+<th>Requirement</th>
+<th>Points</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>findsSomeWordsTest</code> passes</td>
+<td>12 points</td>
+</tr>
+<tr class="even">
+<td><code>findsAllWordsTest</code> passes</td>
+<td>6 points</td>
+</tr>
+<tr class="odd">
+<td><code>BoggleSolver.java</code> implements a recursive method</td>
+<td>6 points</td>
+</tr>
+<tr class="even">
+<td><code>BoggleSolver.java</code> does not have any <code>checkstyle</code> errors</td>
+<td>3 points</td>
+</tr>
+<tr class="odd">
+<td>Check-in post</td>
+<td>1.5 points</td>
+</tr>
+<tr class="even">
+<td><code>BoggleSolver.java</code> compiles without warnings</td>
+<td>1 points</td>
+</tr>
+<tr class="odd">
+<td>Correct submission format (a file named <code>BoggleSolver.java</code>)</td>
+<td>0.5 points</td>
+</tr>
+</tbody>
+</table>
+<section class="footnotes" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1" role="doc-endnote"><p>Adapted from Matthew Drabick and Kevin Wayne: <a href="https://coursera.cs.princeton.edu/algs4/assignments/boggle/specification.php" class="uri">https://coursera.cs.princeton.edu/algs4/assignments/boggle/specification.php</a><a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+</body>
+</html>

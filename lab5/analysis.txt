@@ -1,0 +1,102 @@
+Big O Analysis for TextGenerator
+
+____________________________________________________________________________________________________________
+
+Stats wih respect to k
+
+For frankenstein:
+k = 1
+    0.375
+    0.379
+    0.380
+approximately 0.378 seconds
+
+k = 2
+    0.377
+    0.388
+    0.399
+average: 0.388
+no signifigant difference basically
+
+k = 250
+    0.712
+    0.707
+    0.721
+approximately 0.713 seconds (around 2x longer than when k = 1)
+    
+k = 500
+    0.995
+    1.051
+    1.044
+approcimately 1.03 seconds (around 3x longer than when k = 1)
+
+k = 1000
+    1.570
+    1.700
+    1.586
+approximately 1.616 seconds (around 4x longer than when k = 1)
+
+k = 2000
+    4.958
+    4.083
+    4.219
+approximately 4.42 seconds (around 11x longer than when k = 1)
+
+k = 2500
+    4.008
+    3.783
+    4.101
+approximately 3.964 seconds (around 10x longer than when k = 1)
+
+____________________________________________________________________________________________________________
+
+Stats with respect to n, number of characters in text file
+
+small.text (27 char)
+    0.044
+    0.039
+    0.037
+average: 0.040 seconds
+
+metamorphosis (117210 char)
+    0.230
+    0.217
+    0.226
+average: 0.224 seconds
+
+frankenstein.txt (413309 char)
+    0.375
+    0.379
+    0.380
+average: 0.378 seconds
+
+The Odyssey.txt (600641 char)
+    0.433
+    0.440
+    0.409
+average: 0.427 seconds
+
+Tom Sawyer.txt (378293 char)
+    0.384
+    0.369
+    0.368
+average: 0.374 seconds
+    
+____________________________________________________________________________________________________________
+
+Character Timing Analysis
+
+Based on these numbers, although the running time does depend on how large k is and the number of characters in the input file, it is affected by a 
+much smaller influence than that of a linear complexity O(n) or of O(logn). 
+
+The algorithm is not exactly constant (but kinda close) because as k goes to infinity so will time, but realistically this result is better than a
+linear algorithm and logn which is already quite optimal. Based on the results we would say our algorithm is between the efficency of O(1) and O(logn)
+
+____________________________________________________________________________________________________________
+
+Sequences of k words Analysis
+
+
+
+
+

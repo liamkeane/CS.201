@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Aaron Bauer" />
+  <meta name="dcterms.date" content="2022-02-08" />
+  <title>Lab 5: Text Generation</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        background-color: #fffcf5;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {  background-color: #fffcf5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ef2929; background-color: #fffcf5; } /* Alert */
+    code span.an { color: #8f5902; background-color: #fffcf5; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #c4a000; background-color: #fffcf5; } /* Attribute */
+    code span.bn { color: #0000cf; background-color: #fffcf5; } /* BaseN */
+    code span.cf { color: #006fe0; background-color: #fffcf5; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #d0372d; background-color: #fffcf5; } /* Char */
+    code span.cn { color: #d0372d; background-color: #fffcf5; } /* Constant */
+    code span.co { color: #8d8d84; background-color: #fffcf5; } /* Comment */
+    code span.cv { color: #8d8d84; background-color: #fffcf5; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #8d8d84; background-color: #fffcf5; font-weight: bold; font-style: italic; } /* Documentation */
+    code span.dt { color: #6434a3; background-color: #fffcf5; } /* DataType */
+    code span.dv { color: #0000cf; background-color: #fffcf5; } /* DecVal */
+    code span.er { color: #a40000; background-color: #fffcf5; font-weight: bold; } /* Error */
+    code span.ex { background-color: #fffcf5; } /* Extension */
+    code span.fl { color: #d0372d; background-color: #fffcf5; } /* Float */
+    code span.fu { color: #006699; background-color: #fffcf5; } /* Function */
+    code span.im { background-color: #fffcf5; } /* Import */
+    code span.in { color: #8f5902; background-color: #fffcf5; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #0000ff; background-color: #fffcf5; font-weight: bold; } /* Keyword */
+    code span.op { color: #006fe0; background-color: #fffcf5; font-weight: bold; } /* Operator */
+    code span.ot { color: #8f5902; background-color: #fffcf5; } /* Other */
+    code span.pp { color: #808080; background-color: #fffcf5; font-style: italic; } /* Preprocessor */
+    code span.sc { color: #000000; background-color: #fffcf5; } /* SpecialChar */
+    code span.ss { color: #4e9a06; background-color: #fffcf5; } /* SpecialString */
+    code span.st { color: #008000; background-color: #fffcf5; } /* String */
+    code span.va { color: #ba36a5; background-color: #fffcf5; } /* Variable */
+    code span.vs { color: #4e9a06; background-color: #fffcf5; } /* VerbatimString */
+    code span.wa { color: #8f5902; background-color: #fffcf5; font-weight: bold; font-style: italic; } /* Warning */
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="lab-style.css" />
+  <link rel="apple-touch-icon" sizes="180x180" href="./media/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="./media/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="./media/favicon-16x16.png">
+  <link rel="manifest" href="./media/site.webmanifest">
+
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Lab 5: Text Generation</h1>
+<p class="author">Aaron Bauer</p>
+<p class="date">February 8, 2022</p>
+</header>
+<!-- pandoc -s -c lab-style.css -H lab-header.html --highlight-style highlight-style.theme lab5.md -o lab5.html -->
+<div class="wrapper">
+<h1 id="lab-5-text-generation1">Lab 5: Text Generation<a href="#fn1"
+class="footnote-ref" id="fnref1"
+role="doc-noteref"><sup>1</sup></a></h1>
+<ul>
+<li><strong>Assigned:</strong> Wednesday, February 9</li>
+<li><strong>Check-in Post:</strong> Before 9pm Monday, February 14 (<a
+href="https://moodle.carleton.edu/mod/forum/view.php?id=719093">check-in
+forum</a>)</li>
+<li><strong>Due:</strong> 9pm Friday, February 18</li>
+<li><strong>Collaboration:</strong> Partner assignment (groups of 2
+people—you may also work alone)</li>
+<li><strong>Handout:</strong> <a
+href="./handouts/lab5-handout.zip">starter project</a></li>
+<li><strong>Submit:</strong> Upload <code>TextGenerator.java</code> and
+any supporting files <em>you created</em> to <a
+href="https://moodle.carleton.edu/mod/assign/view.php?id=719080">Lab
+5</a>. If you attempt any <a href="#challenges">Challenges</a> upload
+the files for those and a text file named <code>challenges.txt</code>
+describing what you did.</li>
+<li><strong>Reference:</strong>
+<ul>
+<li><a
+href="https://cs.carleton.edu/faculty/awb/cs201/w22/notes/maps.html">Maps</a></li>
+<li><a
+href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/HashMap.html">Java
+HashMap documentation</a></li>
+<li><a
+href="https://docs.microsoft.com/en-us/visualstudio/liveshare/use/vscode">VS
+Code Live Share</a>—useful for remote pair programming in VS Code</li>
+</ul></li>
+</ul>
+<div class="box alert_box">
+<div class="warning">
+<i>Project</i> Labs
+</div>
+<p>This and the remaining labs in this course will be somewhat different
+than the labs we’ve done so far. They will each be worth 40 points, and
+you will have more time to do them. These labs will be moderately larger
+than previous labs, but the extra time is primarily to give you the
+opportunity to devise and plan out your approach. As such, there will
+also have less in terms of step-by-step procedures to follow. Developing
+your independent problem-solving skills is crucial to using computers to
+solve problems, so these labs put an emphasis on practicing these
+skills.</p>
+</div>
+<h2 id="overview">Overview</h2>
+<p>In this lab you will write a program that analyzes the letter
+frequencies in text documents and then generate new documents based on
+those frequencies. Consider the following three quotes:</p>
+<blockquote>
+<p>Call me Ishmael. Some years ago–never mind how long precisely–having
+repeatedly smelt the spleen respectfully, not to say reverentially, of a
+bad cold in his grego pockets, and throwing grim about with his tomahawk
+from the bowsprit?</p>
+<p>Call me Ishmael. Some years ago–never mind how long precisely–having
+little or no money in my purse, and nothing particular to interest me on
+shore, I thought I would sail about a little and see the watery part of
+the world.</p>
+<p>Call me Ishmael, said I to myself. We hast seen that the lesser man
+is far more prevalent than winds from the fishery.</p>
+</blockquote>
+<p>The second quote is the first sentence of Herman Melville’s 1851
+novel, Moby Dick. The other two quotes were generated <em>in Melville’s
+style</em> using a simple algorithm developed by Claude Shannon in
+1948<a href="#fn2" class="footnote-ref" id="fnref2"
+role="doc-noteref"><sup>2</sup></a>. You will implement Shannon’s
+algorithm in this lab.</p>
+<p>The goals for this lab are</p>
+<ul>
+<li>Practice using Map data structures to efficiently store associated
+data</li>
+<li>Implement a program with more interacting pieces than previous
+labs</li>
+<li>Practice your design skills on a more open-ended assignment</li>
+</ul>
+<h2 id="preparatory-exercises">Preparatory Exercises</h2>
+<ol type="1">
+<li>Read this entire writeup, paying careful attention to <a
+href="#discussion">Discussion</a> and <a
+href="#program-design-and-implementation">Program Design and
+Implementation</a></li>
+<li>Watch the <a href="#introductory-video">Introductory Video</a></li>
+<li>Plan out how you will approach implementing
+<code>TextGenerator</code>.
+<ul>
+<li>What other classes will you create?</li>
+<li>What methods will they have?</li>
+<li>What data structures will you use?</li>
+</ul></li>
+<li>Download the <a href="./handouts/lab5-handout.zip">starter
+project</a>, unzip it into its own folder, and open that folder in VS
+Code.</li>
+</ol>
+<h3 id="introductory-video">Introductory Video</h3>
+<p>Panopto view link: <a
+href="https://carleton.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=a9c98a3c-4dc0-4b90-8c23-accb012447b9"
+class="uri">https://carleton.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=a9c98a3c-4dc0-4b90-8c23-accb012447b9</a></p>
+<iframe src="https://carleton.hosted.panopto.com/Panopto/Pages/Embed.aspx?id=a9c98a3c-4dc0-4b90-8c23-accb012447b9&amp;autoplay=false&amp;offerviewer=true&amp;showtitle=true&amp;showbrand=false&amp;start=0&amp;interactivity=all" height="563" width="1000" style="border: 1px solid #464646;" allowfullscreen allow="autoplay">
+</iframe>
+<h2 id="suggested-timeline">Suggested Timeline</h2>
+<ul>
+<li>Implement and test a <code>LetterInventory</code> class by Saturday,
+2/12</li>
+<li>Implement and test a <code>FrequencyTable</code> class by Monday,
+2/14</li>
+<li>Implement and test a <code>TextGenerator</code> constructor that
+builds up a frequency table by Wednesday, 2/16</li>
+<li>Implement and test the <code>generate</code> method by Friday,
+2/18</li>
+</ul>
+<p>You can, of course, opt to use <code>HashMap</code>s directly in the
+<code>TextGenerator</code> class instead of implementing
+<code>LetterInventory</code> and <code>FrequencyTable</code>, though I
+expect having these separate classes will make the code easier to write,
+test, and debug.</p>
+<h2 id="discussion">Discussion</h2>
+<h3 id="level-0-analysis">Level 0 analysis</h3>
+<p>The following algorithm is based on letter probability distributions.
+Imagine taking the novel <em>Tom Sawyer</em> and counting the frequency
+with which each character occurs. You’d probably find that spaces are
+the most common, that the character <code>'e'</code> is fairly common,
+and that the character <code>'q'</code> is rather uncommon. After
+completing this <em>level 0</em> analysis, you’d be able to produce
+<em>Tom Sawyer</em>-esque text based on character frequencies. The idea
+is to randomly select each character based on the probability of its
+occurrence in the text. This random text wouldn’t have much in common
+with the real novel, but characters would tend to appear with the same
+proportions. In fact, here’s an example of what a <em>level 0</em>
+analysis might produce:</p>
+<blockquote>
+<p>rla bsht eS ststofo hhfosdsdewno oe wee h .mr ae irii ela iad o r te
+u t mnyto onmalysnce, ifu en c fDwn oee iteo</p>
+</blockquote>
+<h3 id="level-1-analysis">Level 1 analysis</h3>
+<p>Now imagine doing a slightly more sophisticated level 1 analysis by
+determining <em>the frequency with which each character follows every
+other character</em>. You would probably discover that <code>'h'</code>
+is more likely to follow <code>'t'</code> than <code>'x'</code>, and you
+would probably discover that a space follows <code>'.'</code> more
+frequently than <code>','</code> does.</p>
+<p>More concretely, if you are analyzing the text
+<code>"the theater is their thing"</code>, <code>'e'</code> appears
+after <code>'h'</code> three times, and <code>'i'</code> appears after
+<code>'h'</code> one time; no other letters appear after
+<code>'h'</code>. So, given this example,</p>
+<ul>
+<li>the <em>probability</em> that <code>'e'</code> follows
+<code>'h'</code> is <code>0.75</code>,</li>
+<li>the <em>probability</em> that <code>'i'</code> follows
+<code>'h'</code> is <code>0.25</code>,</li>
+<li>the <em>probability</em> that any other letter follows
+<code>'h'</code> is <code>0</code>.</li>
+</ul>
+<p>Using a <em>level 1</em> analysis, you could produce randomly
+generated <em>Tom Sawyer</em>-esque text by 1) picking a character, and
+then 2) always choosing the next character based on the probability of
+the next character given the chosen character. Here’s an example of
+<em>level 1</em> random text:</p>
+<blockquote>
+<p>“Shand tucthiney m?” le ollds mind Theybooure He, he s whit Pereg
+lenigabo Jodind alllld ashanthe ainofevids tre lin–p asto oun
+theanthadomoere</p>
+</blockquote>
+<h3 id="level-k-analysis">Level <em>k</em> analysis</h3>
+<p>Now imagine doing a <em>level k</em> analysis by determining the
+probability with which each character <em>follows every possible
+sequence of characters of length k</em>. For example, a <em>level 5</em>
+analysis of <em>Tom Sawyer</em> would reveal that <code>'r'</code>
+follows <code>"Sawye"</code> more frequently than any other character.
+After a <em>level k</em> analysis, you would be able to generate <em>Tom
+Sawyer</em>-esque text by always choosing the next character based on
+the previous <em>k</em> characters and the probabilities revealed by the
+analysis.</p>
+<p>At only a moderate level of analysis (levels 5–7), randomly-generated
+text begins to take on many of the characteristics of the source text.
+It probably won’t make complete sense, but you’ll be able to tell that
+it was derived from Tom Sawyer as opposed to, say, Moby Dick. Here are
+some more examples:</p>
+<blockquote>
+<p>(Level 2:) “Yess been.” for gothin, Tome oso; ing, in to weliss of
+an’te cle - armit. Papper a comeasione, and smomenty, fropeck hinticer,
+sid, a was Tom, be suck tied. He sis tred a youck to themen</p>
+<p>(Level 4) en themself, Mr. Welshman, but him awoke, the balmy shore.
+I’ll give him that he couple overy because in the slated snufflindeed
+structure’s kind was rath. She said that the wound the door a fever eyes
+that WITH him.</p>
+<p>(Level 6:) people had eaten, leaving. Come - didn’t stand it better
+judgment; His hands and bury it again, tramped herself! She’d never
+would be. He found her spite of anything the one was a prime feature
+sunset, and hit upon that of the forever.</p>
+<p>(Level 8:) look-a-here - I told you before, Joe. I’ve heard a pin
+drop. The stillness was complete, however, this is awful crime, beyond
+the village was sufficient. He would be a good enough to get that night,
+Tom and Becky.</p>
+<p>(Level 10:) you understanding that they don’t come around in the cave
+should get the word “beauteous” was over-fondled, and that together” and
+decided that he might as we used to do - it’s nobby fun. I’ll learn
+you.”</p>
+</blockquote>
+<p>Once we have processed input text and stored it in a map structure
+that allows us to check frequencies, we pick <em>k</em> letters (for
+example, the first <em>k</em> in the input text) to use as a
+<em>seed</em> for our new text. Then we choose subsequent characters
+based on the preceding <em>k</em> characters and their frequency
+information. We would need to pick a starting <em>k</em> letters that
+actually appear in the input text, so we have information about what
+letter should come next.</p>
+<h2 id="program-design-and-implementation">Program Design and
+Implementation</h2>
+<p>This lab is deliberately more open-ended than the previous few labs.
+It’s important to practice the skill of designing your own approach to a
+new problem. So instead of a step-by-step procedure, this section
+contains general guidance I think might be useful to you.</p>
+<p>The class that will run your program, <code>TextGenerator</code>, is
+the only one provided in the starter project. It must have the given
+constructor (<code>public TextGenerator(int k, String filename)</code>)
+and method (<code>public String generate(int length)</code>), as the
+grading test cases depend on those. Beyond that, you are free to use any
+design you choose. One possible approach is discussed below.</p>
+<p>When thinking about the design, focus on what would constitute a good
+data structure for this problem. Your data structure needs to keep a
+table of info and be able to support two key operations:</p>
+<ul>
+<li>update the frequencies in the table, given a string of <em>k</em>
+characters and the succeeding character.</li>
+<li>select a next character, given a string of <em>k</em> characters and
+the frequencies stored in your table.</li>
+</ul>
+<p>You might try to save the frequency information in a big array, but
+the size will quickly become too large. For <span
+class="math inline"><em>k</em> = 2</span>, you would need a
+three-dimensional array whose size is about 27,000 entries if you
+include blanks and punctuation. For larger <em>k</em>, the number of
+entries grows rapidly.</p>
+<p>Instead, you could develop a <code>FrequencyTable</code> class
+implemented with a <code>HashMap</code>. The <code>HashMap</code> could
+store character sequences (i.e., <code>String</code>s) as the
+<em>keys</em> and <code>LetterInventory</code>s as the <em>values</em>
+(i.e.,
+<code>private HashMap&lt;String, LetterInventory&gt; table</code>). The
+<code>LetterInventory</code> is a class (which you would also develop)
+that keeps track of which characters appear after a given sequence,
+along with a frequency.</p>
+<p>There are many ways to implement a <code>LetterInventory</code>. A
+good start is… another <code>HashMap</code>! Thus, the letter
+inventory’s <code>HashMap</code> stores key-value pairs where each
+<em>key</em> is a single character (stored as a <code>Character</code>)
+and each <em>value</em> is the number of times the given letter occurs
+after the <em>k</em>-character sequence with which the inventory is
+associated (stored as an <code>Integer</code>). This would have type
+<code>HashMap&lt;Character, Integer&gt;</code>. Think carefully about
+what methods the letter inventory should have.</p>
+<!-- As a guide, here's how my own solution broke down:
+
+- `TextGenerator`: I wrote 2 methods, about 10 lines each
+- `FrequencyTable`: I wrote 4 methods, about 2 lines each
+- `LetterInventory`: I wrote 2 very short methods, and one longer method to implement the algorithm described in the [Selecting the next character] section -->
+<h3 id="selecting-a-random-key">Selecting a random key</h3>
+<p>Let’s say you have a field
+<code>HashMap&lt;String, LetterInventory&gt; table</code> and you want
+to select a random key from the map. You might want to do something like
+this in order to pick an initial <em>k</em>-length string for
+<code>generate</code> to start with (or better yet, implement a
+<code>FrequencyTable</code> method that provides this functionality).
+Doing this turns out to be a little cumbersome in Java. The first step
+is to get an array of all the keys:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode java"><code class="sourceCode java"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="bu">Object</span><span class="op">[]</span> keys <span class="op">=</span> table<span class="op">.</span><span class="fu">keySet</span><span class="op">().</span><span class="fu">toArray</span><span class="op">();</span></span></code></pre></div>
+<p><code>keys</code> is type <code>Object[]</code> because the
+<code>toArray</code> method returns an array of <code>Object</code>s.
+Next we can use the <code>StdRandom</code> class from the algs4 library
+to generate a random index for this array:</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode java"><code class="sourceCode java"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="bu">String</span> randomKey <span class="op">=</span> <span class="op">(</span><span class="bu">String</span><span class="op">)</span> keys<span class="op">[</span>StdRandom<span class="op">.</span><span class="fu">uniform</span><span class="op">(</span>keys<span class="op">.</span><span class="fu">length</span><span class="op">)];</span></span></code></pre></div>
+<h3 id="selecting-the-next-character">Selecting the next character</h3>
+<p>As part of this frequency analysis approach, you will be faced with
+the situation of having characters and associated counts (in say, your
+<code>LetterInventory</code> class), and needing to select a character
+with probability proportional to its frequency (see <a
+href="#level-1-analysis">Level 1 analysis</a> for an example). Here’s an
+algorithm you might use to accomplish this:</p>
+<ol type="1">
+<li>Find the sum of all the counts, call it <code>total</code></li>
+<li>Generate a random number between 0 and 1, call it
+<code>threshold</code> (e.g.,
+<code>threshhold = StdRandom.uniform();</code>)</li>
+<li>Loop over the each <code>letter</code> and the associated
+<code>count</code>
+<ol type="1">
+<li>Update <code>threshold</code> to
+<code>threshold - count / total</code></li>
+<li>If <code>threshold</code> is less than zero, select
+<code>letter</code></li>
+</ol></li>
+</ol>
+<p>The basic idea is that we convert each count into a probability by
+dividing it by the sum of all counts. By subtracting each probability
+from our random <code>threshold</code>, we give each letter the
+appropriate chance of being selected.</p>
+<p>For example, assume these probabilities are 0.3, 0.5, and 0.2. A
+random number between 0 and 1 has a 30% chance of being less than 0.3,
+so <code>threshold - 0.3</code> has a 30% of being less than 0. It also
+has a 50% chance of being between 0.3 and 0.8, so
+<code>threshold - 0.3 - 0.5</code> has a 50% chance of being less than
+0. Finally, the random number has a 20% chance of being between 0.8 and
+1, so there’s a 20% chance the previous two letters weren’t selected and
+we select the third.</p>
+<h2 id="testing">Testing</h2>
+<p>The starter project includes JUnit test cases to assess the
+correctness of the <code>generate</code> method of the
+<code>TextGenerator</code> class. See <a href="#grading">Grading</a> for
+how each test case contributes to your lab grade.</p>
+<p>You should build your program in stages that you have <em>planned out
+ahead of time</em>. While writing and debugging your code, try using the
+<code>small.txt</code> input file (containing only
+<code>the theater is their thing</code>) and a <em>k</em> of 1. Using
+these fixed parameters will help you ensure the correctness of your code
+since you can verify the correct answers by hand on paper.</p>
+<p>One benefit of breaking up your program into several classes
+(<code>LetterInventory</code>, <code>FrequencyTable</code>, and
+<code>TextGenerator</code>) as described in <a
+href="#program-design-and-implementation">Program Design and
+Implementation</a> is that you can test each piece independently. As you
+work on each class, write a <code>main</code> method that constructs an
+instance of your class and calls all its <code>public</code> methods,
+printing their return values. That was you can assess whether these
+methods are working as expected. I have added a warning to
+<code>checkstyle</code> about creating such a <code>main</code> method
+to help you remember.</p>
+<h2 id="style">Style</h2>
+<p>You are expected to submit files that contains no
+<code>checkstyle</code> errors <em>or warnings</em>. You will lose 0.5
+points per error (up to a maximum of 3) and per warning (up to a maximum
+of 2), as indicated in the <a href="#grading">Grading</a> breakdown.</p>
+<div class="box alert_box">
+<div class="warning">
+<code>checkstyle</code> Warnings
+</div>
+<p>For this and all following labs you are expected to address
+<strong>ALL</strong> <code>checkstyle</code> problems, including
+warnings.</p>
+</div>
+<h2 id="challenges">Challenges</h2>
+<p>Consider attempting any or all of these additional challenges if you
+have time:</p>
+<ul>
+<li><strong>Timing</strong> (1 point). Using the <a
+href="https://algs4.cs.princeton.edu/code/javadoc/edu/princeton/cs/algs4/StopwatchCPU.html"><code>StopwatchCPU</code></a>
+class from algs4, measure the running time of generating 1000 characters
+of text for different input files and values of <em>k</em> (time the
+whole process, including reading the input file and building up the
+table of frequencies). Based on these results, what is the big-O running
+time in terms of <em>n</em> (number of characters in the input file) and
+<em>k</em>? Submit a text file or a spreadsheet with your results and
+interpretation.</li>
+<li><strong>Word-based analysis</strong> (1 point). Instead of working
+at the character level, you could work at the word level. Instead of
+sequences of <em>k</em> characters, your analysis would consider
+sequences of <em>k</em> words (and the frequency of subsequent words).
+How would this affect your program design? Does word-level analysis make
+the results better or worse in any way? Is your word-level analysis more
+or less sensitive to your choice of k? Why? Implement this word-based
+text generation as a separate Java class and submit the file.</li>
+<li><strong>The Soundex Name Lookup System</strong> (2 points). Complete
+Lab 15.8 from Bailey (The Soundex Name Lookup System).</li>
+</ul>
+<div class="box alert_box">
+<div class="warning">
+Challenges
+</div>
+<p>Challenges are a way to go above and beyond what is expected for a
+lab. Only attempt them <em>after you are completely finished with all
+other parts of the lab</em>. Completing all the non-challenge components
+of a lab will earn 38/40 (95%, an A). Earning challenge points can
+result in a grade higher than 100%.</p>
+</div>
+<h2 id="grading">Grading</h2>
+<p>This lab will be graded out of 40 points as shown below. While most
+of the points for this lab are associated with specific test cases,
+partial credit can be earned for test cases that don’t pass. It it
+possible to earn a passing graded even if your submission does not pass
+any tests. Partial credit will be awarded based on evidence of a
+good-faith effort to implement the related features. Comments explaining
+your approach can help earn partial credit.</p>
+<table>
+<colgroup>
+<col style="width: 90%" />
+<col style="width: 9%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Requirement</th>
+<th>Points</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>isRandom</code> passes</td>
+<td>6 points</td>
+</tr>
+<tr class="even">
+<td><code>usesFrequency</code> passes</td>
+<td>6 points</td>
+</tr>
+<tr class="odd">
+<td><code>level1</code> passes</td>
+<td>5 points</td>
+</tr>
+<tr class="even">
+<td><code>level2</code> passes</td>
+<td>4 points</td>
+</tr>
+<tr class="odd">
+<td><code>level4</code> passes</td>
+<td>4 points</td>
+</tr>
+<tr class="even">
+<td><code>level8</code> passes</td>
+<td>4 points</td>
+</tr>
+<tr class="odd">
+<td>Submitted files do not have any <code>checkstyle</code> errors</td>
+<td>3 points</td>
+</tr>
+<tr class="even">
+<td>Submitted files do not have any <code>checkstyle</code>
+warnings</td>
+<td>2 points</td>
+</tr>
+<tr class="odd">
+<td>Check-in post</td>
+<td>2 points</td>
+</tr>
+<tr class="even">
+<td><code>TextGenerator.java</code> compiles without warnings</td>
+<td>1 point</td>
+</tr>
+<tr class="odd">
+<td>Correct submission format (<code>TextGenerator.java</code> and any
+necessary supporting files)</td>
+<td>1 point</td>
+</tr>
+<tr class="even">
+<td>Challenges</td>
+<td>up to 4 points</td>
+</tr>
+</tbody>
+</table>
+<section class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1" role="doc-endnote"><p>Adapted from Bill Lenhart and Bill
+Jannen: <a
+href="https://williams-cs.github.io/cs136-f20-www/labs/wordgen.html"
+class="uri">https://williams-cs.github.io/cs136-f20-www/labs/wordgen.html</a><a
+href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2" role="doc-endnote"><p>Claude Shannon, “A mathematical
+theory of communication”, Bell System Technical Journal, 1948. Shannon’s
+technique was popularized by A.K. Dewdney’s <a
+href="https://www.clear.rice.edu/comp200/09fall/textriff/sci_am_paper.htm">A
+potpourri of programmed prose and prosody</a> that appeared in
+Scientific American, 122-TK, 1989.<a href="#fnref2"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+</body>
+</html>

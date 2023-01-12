@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Aaron Bauer" />
+  <meta name="dcterms.date" content="2022-01-09" />
+  <title>Lab 1: Silver Dollar Game</title>
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    background-color: #fffcf5;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  { background-color: #fffcf5; }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; background-color: #fffcf5; } /* Alert */
+code span.an { color: #8f5902; background-color: #fffcf5; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #c4a000; background-color: #fffcf5; } /* Attribute */
+code span.bn { color: #0000cf; background-color: #fffcf5; } /* BaseN */
+code span.cf { color: #006fe0; background-color: #fffcf5; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #d0372d; background-color: #fffcf5; } /* Char */
+code span.cn { color: #d0372d; background-color: #fffcf5; } /* Constant */
+code span.co { color: #8d8d84; background-color: #fffcf5; } /* Comment */
+code span.cv { color: #8d8d84; background-color: #fffcf5; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8d8d84; background-color: #fffcf5; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #6434a3; background-color: #fffcf5; } /* DataType */
+code span.dv { color: #0000cf; background-color: #fffcf5; } /* DecVal */
+code span.er { color: #a40000; background-color: #fffcf5; font-weight: bold; } /* Error */
+code span.ex { background-color: #fffcf5; } /* Extension */
+code span.fl { color: #d0372d; background-color: #fffcf5; } /* Float */
+code span.fu { color: #006699; background-color: #fffcf5; } /* Function */
+code span.im { background-color: #fffcf5; } /* Import */
+code span.in { color: #8f5902; background-color: #fffcf5; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #0000ff; background-color: #fffcf5; font-weight: bold; } /* Keyword */
+code span.op { color: #006fe0; background-color: #fffcf5; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; background-color: #fffcf5; } /* Other */
+code span.pp { color: #808080; background-color: #fffcf5; font-style: italic; } /* Preprocessor */
+code span.sc { color: #000000; background-color: #fffcf5; } /* SpecialChar */
+code span.ss { color: #4e9a06; background-color: #fffcf5; } /* SpecialString */
+code span.st { color: #008000; background-color: #fffcf5; } /* String */
+code span.va { color: #ba36a5; background-color: #fffcf5; } /* Variable */
+code span.vs { color: #4e9a06; background-color: #fffcf5; } /* VerbatimString */
+code span.wa { color: #8f5902; background-color: #fffcf5; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="lab-style.css" />
+  <link rel="apple-touch-icon" sizes="180x180" href="./media/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="./media/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="./media/favicon-16x16.png">
+  <link rel="manifest" href="./media/site.webmanifest">
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Lab 1: Silver Dollar Game</h1>
+<p class="author">Aaron Bauer</p>
+<p class="date">January 9, 2022</p>
+</header>
+<!-- pandoc -s -c lab-style.css -H lab-header.html --highlight-style highlight-style.theme lab1.md -o lab1.html -->
+<div class="wrapper">
+<h1 id="lab-1-silver-dollar-game1">Lab 1: Silver Dollar Game<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></h1>
+<ul>
+<li><strong>Assigned:</strong> Monday, January 10</li>
+<li><strong>Check-in Post:</strong> Before 9pm Thursday, January 13 (<a href="https://moodle.carleton.edu/mod/forum/view.php?id=719086">check-in forum</a>)</li>
+<li><strong>Due:</strong> 9pm Monday, January 17</li>
+<li><strong>Collaboration:</strong> Partner assignment (groups of 2 people—you may also work alone)</li>
+<li><strong>Handout:</strong> <a href="./handouts/lab1-handout.zip">starter project</a></li>
+<li><strong>Submit:</strong> Upload <code>CoinStrip.java</code> to <a href="https://moodle.carleton.edu/mod/assign/view.php?id=719076">Lab 1</a></li>
+<li><strong>Reference:</strong>
+<ul>
+<li><a href="./notes/java-basics.html">Java Basics</a></li>
+<li><a href="./notes/oop1.html">OOP I</a></li>
+<li><a href="./notes/oop2.html">OOP II</a></li>
+<li><a href="./notes/rock-paper-scissors/RockPaperScissors.java">Rock, Paper, Scissors example</a></li>
+</ul></li>
+</ul>
+<div class="box alert_box">
+<div class="warning">
+Check-in Post
+</div>
+<p>For this and each subsequent lab in this course, you will be expected to make a check-in post on a Moodle forum by a certain date. These posts are intended to facilitate class-wide collaboration on the labs and incentivize you to start the lab early. <strong>Making an on-time check-in post will constitute 5% of the lab grade.</strong> Specifically, you should contribute at least one of the following:</p>
+<ul>
+<li>Something surprising or difficult that you’ve learned that you think would help others</li>
+<li>A point of confusion</li>
+<li>Something you’re stuck on</li>
+<li>A deeper question sparked by the lab</li>
+<li>A response to someone else’s post.</li>
+</ul>
+<p>You can find the lab 1 check-in forum here: <a href="https://moodle.carleton.edu/mod/forum/view.php?id=719086" class="uri">https://moodle.carleton.edu/mod/forum/view.php?id=719086</a></p>
+</div>
+<h2 id="overview">Overview</h2>
+<p>In this lab, we will write a program to play the Silver Dollar Game described at the end of Bailey Chapter 3 (page 67). In addition to gaining experience writing, compiling, and running programs from scratch, this lab will help us to think about how we can efficiently represent data and break our logic into reusable methods. Careful planning will help tremendously, so take the time to complete the <a href="#preparatory-exercises">Preparatory Exercises</a> before beginning your work on the lab.</p>
+<h2 id="preparatory-exercises">Preparatory Exercises</h2>
+<div class="box alert_box">
+<p>Preparatory exercises are never need to be submitted and are not graded—their purpose is to ensure that you think about the lab in advance.</p>
+</div>
+<p>Before you begin writing Java code for this lab, I recommend you (1) read the <a href="./SilverDollar.pdf">lab description from the textbook</a>, (2) read through this lab handout, and (3) sketch out a design for your Silver Dollar Game program. You should feel free to use the sample <a href="./handouts/RPS-design-doc.html">Rock, Paper, Scissors Design Document</a> as a guide. It is OK if the design is very simple to start! It is expected you will start with a rough outline and refine it as you work on the lab. You might also refer to this <a href="./notes/rock-paper-scissors/RockPaperScissors.java">Rock, Paper, Scissors example</a> that implements a simple Rock, Paper, Scissors game using the <code>TwoPlayerGame</code> interface that you will use for this lab.</p>
+<h2 id="suggested-timeline">Suggested Timeline</h2>
+<ul>
+<li>Complete the <a href="#preparatory-exercises">Preparatory Exercises</a> and <a href="#step-1-getting-the-code">Step 1: Getting the Code</a> by Wednesday.</li>
+<li>Complete <a href="#step-2-implementing-coinstrip">Step 2: Implementing <code>CoinStrip</code></a> by Friday</li>
+<li>That leaves you the weekend and Monday for <a href="#step-3-testing">Step 3: Testing</a>, debugging, and <a href="#step-4-style">Step 4: Style</a></li>
+</ul>
+<h2 id="step-1-getting-the-code">Step 1: Getting the Code</h2>
+<p>Download the starter project (<a href="./handouts/lab1-handout.zip">lab1-handout.zip</a>). Unzip it and make sure the files are in their own folder. Open the folder in VS Code (File&gt;Open Folder).</p>
+<h2 id="step-2-implementing-coinstrip">Step 2: Implementing <code>CoinStrip</code></h2>
+<p>In this lab you will implement the Silver Dollar Game that is found at the end of Bailey Chapter 3 (Note: page 67 of the text, 83 in the PDF) or in this <a href="./SilverDollar.pdf">PDF excerpt</a>.</p>
+<p>As you think about the design of your game, you should first decide on a representation of the coin strip. Make sure your representation supports all of the operations necessary such as:</p>
+<ul>
+<li>Generating different game boards. Your game boards must conform to the following rules:
+<ul>
+<li>Each game board must have at least three coins, but the exact number of coins on a given game board must be chosen with some randomness.<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a></li>
+<li>The locations of coins must be randomly selected. In other words, over the course of playing several games, you should expect to encounter different starting configurations.</li>
+<li>No game should be “won” before it starts. In other words, there must be at least one legal move.</li>
+</ul></li>
+<li>Testing whether a move is legal. The rules are fully described in the textbook, but here is a summary:
+<ul>
+<li>No “going right”: Coins can only move to the left.</li>
+<li>No “double occupancy”: At most one coin can occupy a space at a given time.</li>
+<li>No “jumps”: Coins cannot pass another coin.</li>
+<li>“Mandatory progress”: A coin must move one or more spaces.</li>
+</ul></li>
+<li><p>Printing the board. Somewhere in your code, you will call <code>System.out.println</code>, but we recommend using the following approach:</p>
+<blockquote>
+<p>Implement a <code>public String toString()</code> method for your <code>CoinStrip</code> class. It should return a <em>reasonable</em> <code>String</code> representation of the game board. This is where there we intentionally provide the least specification and give you the most flexibility. Your game board’s <code>String</code> representation should make it clear to the players exactly what the state of the game is at any given time. The string should also provide enough information to the player that they can specify the move that they would like to make next. However, you have some flexibility to add your own “style” to how you display the board. Simple is fine. Elaborate is fine. Please just make it clear!</p>
+</blockquote></li>
+<li>Testing for a win.</li>
+<li><p>Moving pieces. When a legal move is given, you should be able to adjust the state of the game to reflect that move. This includes things like relocating coins, changing the current player, etc.</p></li>
+</ul>
+<p>When we say “representation,” our real focus is: what <em>data structures</em> will you use? For instance, you might use a variable <code>boolean[10] board;</code> to represent the game board, where each index of the array represents a space on the strip of paper, and <code>true</code> indicates that a coin is present in that space while <code>false</code> indicates that the space is empty. This is a sensible approach, but let’s think about the implications of this design:</p>
+<ul>
+<li>If I have a game with 3 coins, how large is my board array? What if I instead have 6 coins? In this representation, the size of the array is always larger than the number of coins, and the smallest size the board can be is the position of the rightmost coin.</li>
+<li>Let’s think about enforcing the rules. If I want to make sure a move doesn’t violate the “no jumps” rule, one approach is to check the starting position of the coin, and then examine every array index between that position and the target position of the coin after the move. If there is a <code>true</code> somewhere between those two locations, I know that my coin is “jumping” another. Given this implementation, how many locations do I need to check? The number depends on the “size” of my move.</li>
+</ul>
+<p>There are other interesting design questions that would come up if we were to implement the Silver Dollar Game this way. Now, it is certainly possible to use this design to successfully create all the game’s required functionality, but it probably isn’t the <em>best</em> solution we can come up with. Let’s explore an alternative design.</p>
+<h3 id="the-two-player-game-interface">The Two-Player Game Interface</h3>
+<p>The starter project provides a Java interface inside the file <code>TwoPlayerGame.java</code>. This interface describes three methods that you must implement in your <code>CoinStrip</code> class. We’ve replicated the contents of <code>TwoPlayerGame.java</code> below:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode java"><code class="sourceCode java"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">public</span> <span class="kw">interface</span> TwoPlayerGame {</a>
+<a class="sourceLine" id="cb1-2" title="2"></a>
+<a class="sourceLine" id="cb1-3" title="3">    <span class="co">/**</span></a>
+<a class="sourceLine" id="cb1-4" title="4">    <span class="co">*</span> Returns true if the specification of a move describes a legal move</a>
+<a class="sourceLine" id="cb1-5" title="5">    <span class="co">*</span> given the rules of the game<span class="co">. </span>Note<span class="co">:</span> this does not check whether the</a>
+<a class="sourceLine" id="cb1-6" title="6">    <span class="co">*</span> move is a <span class="co">*</span>good<span class="co">*</span> move<span class="co">,</span> only whether the move is legal<span class="co">.</span></a>
+<a class="sourceLine" id="cb1-7" title="7">    <span class="co">*</span> The move specified is checked against all game rules<span class="co">.</span></a>
+<a class="sourceLine" id="cb1-8" title="8">    <span class="co">*</span></a>
+<a class="sourceLine" id="cb1-9" title="9">    <span class="co">*</span> A move is described by<span class="co">:</span></a>
+<a class="sourceLine" id="cb1-10" title="10">    <span class="co">*</span>   <span class="co">-</span> a resource <span class="co">(</span>e<span class="co">.</span>g<span class="co">.,</span> position<span class="co">,</span> gamepiece<span class="co">,</span> pile of matches<span class="co">,</span> etc<span class="co">.)</span></a>
+<a class="sourceLine" id="cb1-11" title="11">    <span class="co">*</span>   <span class="co">-</span> a description of the move <span class="co">(</span>e<span class="co">.</span>g<span class="co">.,</span> how many matches to remove<span class="co">,</span> how</a>
+<a class="sourceLine" id="cb1-12" title="12">    <span class="co">*</span>                                many spaces to move<span class="co">,</span> etc<span class="co">.)</span></a>
+<a class="sourceLine" id="cb1-13" title="13">    <span class="co">*</span> <span class="an">@param resource </span>describes the game element</a>
+<a class="sourceLine" id="cb1-14" title="14">    <span class="co">*</span> <span class="an">@param units </span>describes the move</a>
+<a class="sourceLine" id="cb1-15" title="15">    <span class="co">*</span> <span class="an">@return </span>true if the move is valid</a>
+<a class="sourceLine" id="cb1-16" title="16">    <span class="co">*/</span></a>
+<a class="sourceLine" id="cb1-17" title="17">    <span class="kw">public</span> <span class="dt">boolean</span> <span class="fu">isValidMove</span>(<span class="dt">int</span> resource, <span class="dt">int</span> units);</a>
+<a class="sourceLine" id="cb1-18" title="18"></a>
+<a class="sourceLine" id="cb1-19" title="19">    <span class="co">/**</span></a>
+<a class="sourceLine" id="cb1-20" title="20">    <span class="co">*</span> At the conclusion of this method<span class="co">,</span> the game state is changed to represent</a>
+<a class="sourceLine" id="cb1-21" title="21">    <span class="co">*</span> the completion of the described move<span class="co">. </span>If the described move is not valid<span class="co">,</span></a>
+<a class="sourceLine" id="cb1-22" title="22">    <span class="co">*</span> the behavior of this method is undefined<span class="co">.</span></a>
+<a class="sourceLine" id="cb1-23" title="23">    <span class="co">*</span></a>
+<a class="sourceLine" id="cb1-24" title="24">    <span class="co">*</span></a>
+<a class="sourceLine" id="cb1-25" title="25">    <span class="co">*</span> A move is described by<span class="co">:</span></a>
+<a class="sourceLine" id="cb1-26" title="26">    <span class="co">*</span>   <span class="co">-</span> a resource <span class="co">(</span>e<span class="co">.</span>g<span class="co">.,</span> position<span class="co">,</span> gamepiece<span class="co">,</span> pile of matches<span class="co">,</span> etc<span class="co">.)</span></a>
+<a class="sourceLine" id="cb1-27" title="27">    <span class="co">*</span>   <span class="co">-</span> a description of the move <span class="co">(</span>e<span class="co">.</span>g<span class="co">.,</span> how many matches to remove<span class="co">,</span> how</a>
+<a class="sourceLine" id="cb1-28" title="28">    <span class="co">*</span>                                many spaces to move<span class="co">,</span> etc<span class="co">.).</span></a>
+<a class="sourceLine" id="cb1-29" title="29">    <span class="co">*</span></a>
+<a class="sourceLine" id="cb1-30" title="30">    <span class="co">*</span> <span class="an">@param resource </span>describes the game element</a>
+<a class="sourceLine" id="cb1-31" title="31">    <span class="co">*</span> <span class="an">@param units </span>describes the move</a>
+<a class="sourceLine" id="cb1-32" title="32">    <span class="co">*/</span></a>
+<a class="sourceLine" id="cb1-33" title="33">    <span class="kw">public</span> <span class="dt">void</span> <span class="fu">makeMove</span>(<span class="dt">int</span> resource, <span class="dt">int</span> units);</a>
+<a class="sourceLine" id="cb1-34" title="34"></a>
+<a class="sourceLine" id="cb1-35" title="35">    <span class="co">/**</span></a>
+<a class="sourceLine" id="cb1-36" title="36">    <span class="co">*</span> Returns true if the game is over<span class="co">.</span></a>
+<a class="sourceLine" id="cb1-37" title="37">    <span class="co">*</span> <span class="an">@return </span>True if the game is over<span class="co">,</span> false otherwise<span class="co">.</span></a>
+<a class="sourceLine" id="cb1-38" title="38">    <span class="co">*/</span></a>
+<a class="sourceLine" id="cb1-39" title="39">    <span class="kw">public</span> <span class="dt">boolean</span> <span class="fu">isGameOver</span>();</a>
+<a class="sourceLine" id="cb1-40" title="40">}</a></code></pre></div>
+<p>Since we require that you use this interface, we’ll talk now about a design that we think lends itself to a nice implementation of the Silver Dollar Game.</p>
+<p>Instead of representing the <em>spaces on the game board</em>, we can create a data structure that represents the <em>locations of the coins</em>. Let’s use an array of integers, <code>int coins[]</code>, where each index corresponds to a single coin, and the value stored at a given index represents the location of that coin on the board.</p>
+<p>Now let’s reexamine the questions we posed for the previous design:</p>
+<ul>
+<li>If I have a game with 3 coins, how large is my <code>coins</code> array? What if I instead have 6 coins? In this representation, the size of the array is always the number of coins. It does not change based upon where those coins are located.</li>
+<li>Let’s think about enforcing the rules. If I want to make sure a move doesn’t violate the “no jumps” rule, one approach is to check the starting position of the coin to be moved (examining the <code>coins</code> array at some index <code>i</code>), and then verifying that no coins lie between that location and the target position of the coin after the move. If I’m careful about my representation, I do not need to check every element of the array! Suppose I require that my coins array is in ascending order; how many “coins” do I need to check? Only one!</li>
+</ul>
+<p>This is a very compact representation of the game, and it makes enforcing many rules fairly efficient!</p>
+<p>Once you have worked through the details of your representation, write down the set of operations needed to adjust/check/populate your data structure (including operations you may need that are <em>not</em> in the <code>TwoPlayerGame</code> interface). Since we’re using Java, your representation should be hidden inside a class called <code>CoinStrip</code>. Operations are made possible by providing <em>public methods</em> that implement those operations. Think about what parameters your methods will take, what values they return, and what the methods do.</p>
+<h3 id="required-methods">Required Methods</h3>
+<p>In addition to the <code>TwoPlayerGame.java</code> interface, we also require two methods to help us test your code. These methods are shown below:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode java"><code class="sourceCode java"><a class="sourceLine" id="cb2-1" title="1"><span class="co">/**</span></a>
+<a class="sourceLine" id="cb2-2" title="2"> <span class="co">*</span> Returns the number of coins on the CoinStrip game board<span class="co">.</span></a>
+<a class="sourceLine" id="cb2-3" title="3"> <span class="co">*</span> <span class="an">@return </span>the number of coints on the CoinStrip game board<span class="co">.</span></a>
+<a class="sourceLine" id="cb2-4" title="4"> <span class="co">*/</span></a>
+<a class="sourceLine" id="cb2-5" title="5"><span class="kw">public</span> <span class="dt">int</span> <span class="fu">getNumCoins</span>() {</a>
+<a class="sourceLine" id="cb2-6" title="6">    <span class="kw">return</span> <span class="dv">0</span>;</a>
+<a class="sourceLine" id="cb2-7" title="7">}</a>
+<a class="sourceLine" id="cb2-8" title="8"></a>
+<a class="sourceLine" id="cb2-9" title="9"><span class="co">/**</span></a>
+<a class="sourceLine" id="cb2-10" title="10"> <span class="co">*</span> Returns the <span class="co">0-</span>indexed location of a specific coin<span class="co">. </span>Coins are</a>
+<a class="sourceLine" id="cb2-11" title="11"> <span class="co">*</span> also zero<span class="co">-</span>indexed<span class="co">.</span> So<span class="co">,</span> if the CoinStrip had <span class="co">3</span> coins<span class="co">,</span> the coins</a>
+<a class="sourceLine" id="cb2-12" title="12"> <span class="co">*</span> would be indexed <span class="co">0,</span> <span class="co">1,</span> or <span class="co">2.</span></a>
+<a class="sourceLine" id="cb2-13" title="13"> <span class="co">*</span> <span class="an">@param coinNum </span>the <span class="co">0-</span>indexed coin number</a>
+<a class="sourceLine" id="cb2-14" title="14"> <span class="co">*</span> <span class="an">@return </span>the <span class="co">0-</span>indexed location of the specified coin on the CoinStrip</a>
+<a class="sourceLine" id="cb2-15" title="15"> <span class="co">*/</span></a>
+<a class="sourceLine" id="cb2-16" title="16"><span class="kw">public</span> <span class="dt">int</span> <span class="fu">getCoinPosition</span>(<span class="dt">int</span> coinNum) {</a>
+<a class="sourceLine" id="cb2-17" title="17">    <span class="kw">return</span> <span class="dv">0</span>;</a>
+<a class="sourceLine" id="cb2-18" title="18">}</a></code></pre></div>
+<p>I will rarely impose any particular implementation strategy on you in this course, and I don’t think these methods do so; the <code>getNumCoins()</code> and <code>getCoinPosition(int coinNum)</code> methods are quite general. In other words, the methods themselves ask you to provide specific behaviors (which we will rely upon to test your programs), but the methods do not impose any restrictions on the way you implement those behaviors. Further, we think the behaviors these methods provide is critical for any <code>CoinStrip</code> implementation that we can imagine, so we hope that you use these methods to simplify your code.</p>
+<h3 id="further-details">Further Details</h3>
+<p>The <code>main</code> method of your <code>CoinStrip</code> class should create a <code>CoinStrip</code> object and then prompt each of two players to make their moves. A move will be of the form:</p>
+<pre><code>&lt;cn&gt; &lt;ns&gt;</code></pre>
+<p>where <code>&lt;cn&gt;</code> (coin number) specifies the coin to be moved and <code>&lt;ns&gt;</code> (number of spaces) specifies the number of spaces that coin should be moved.</p>
+<p>The program should prompt the user for another input if the move is illegal.</p>
+<p>To read input from a terminal window, you can use Java’s <code>Scanner</code> class or <code>StdIn</code> from <code>algs4</code>. Here are links to the documentation for both:</p>
+<ul>
+<li><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Scanner.html">Scanner</a></li>
+<li><a href="https://algs4.cs.princeton.edu/code/javadoc/edu/princeton/cs/algs4/StdIn.html">StdIn</a></li>
+</ul>
+<p>In this case, I have provided a <code>main</code> method that runs the game and gets user input as part of the starter code.</p>
+<h2 id="step-3-testing">Step 3: Testing</h2>
+<p>The lab handout includes some test cases to help you check whether your <code>CoinStrip</code> implementation follows the specification described in this writeup. The code for these test cases is located in <code>CoinStripTest.java</code>. Running this file with VS Code will run the tests, each of which will print out a message to the terminal about whether the test passed or failed. These tests check</p>
+<ul>
+<li>That the <code>CoinStrip</code> constructor
+<ul>
+<li>never creates a game that is already over (according to <code>CoinStrip.isGameOver</code>)</li>
+<li>never creates a game where there is no valid move (according to <code>CoinStrip.isValidMove</code>)</li>
+<li>never creates a game with fewer than 3 coins</li>
+<li>randomly chooses the number of coins and their initial positions</li>
+</ul></li>
+<li>That <code>CoinStrip.isValidMove</code> correctly handles invalid moves</li>
+</ul>
+<p>Passing these tests is part of your lab grade (see <a href="#grading">Grading</a>). You are free to add test cases to <code>CoinStripTests.java</code> (this file is not turned in).</p>
+<p>Some functionality of your game is most easily tested by playing your game in a methodical way. Make sure to play through a whole game, testing both valid and invalid inputs. You can assume the user will enter numerical inputs for the moves—it’s fine if your game crashes on other types of input.</p>
+<h2 id="step-4-style">Step 4: Style</h2>
+<p>As relatively new programmers, we are all developing our understanding of what it means to have <em>good style</em>. This is made difficult by the fact that the definition of good style is both hard to quantify, and hard to agree upon.</p>
+<p>To help us all along our lifelong quests to write better code, we have included a tool inside each of our repositories that checks our code against some industry-standard, agreed-upon best practices. This tool is called <code>checkstyle</code>. The starter project is already configured to use <code>checkstyle</code>, and as part of Lab 0 you should have installed the <em>Checkstyle for Java</em> extension.</p>
+<p><code>checkstyle</code> will detect style problems, and underline them in red (errors) and yellow (warnings) in your code. They will also appear in the <em>PROBLEMS</em> tab in VS Code. You can view the <em>PROBLEMS</em> tab by going to View&gt;Problems or pressing Ctrl-Shift-M (Cmd-Shift-M on Mac).</p>
+<p>For this lab we will be fairly lenient on style grading, and become more strict later on in the course. You are expected to submit a <code>CoinStrip.java</code> that contains no <code>checkstyle</code> <em>errors</em>. In particular, you must fill out the header comment at the top of <code>CoinStrip.java</code> with your name, email, and a (brief) description of your code. You must also make sure to declare all fields of <code>CoinStrip</code> either <code>public</code> or <code>private</code> (probably <code>private</code>).</p>
+<p>It is ok to have <code>checkstyle</code> warnings in your submitted code, though I encourage you to fix them if you have time. Avoiding these warnings will be part of your grade on future labs.</p>
+<h2 id="grading">Grading</h2>
+<p>This lab will be graded out of 30 points as follows:</p>
+<table>
+<colgroup>
+<col style="width: 90%" />
+<col style="width: 9%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Requirement</th>
+<th>Points</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Test cases in <code>CoinStripTests.java</code> (3 points each)</td>
+<td>15 points</td>
+</tr>
+<tr class="even">
+<td><code>CoinStrip.java</code> produces no <code>checkstyle</code> errors</td>
+<td>4 points</td>
+</tr>
+<tr class="odd">
+<td>User prompted to reenter move when invalid move is entered</td>
+<td>2 points</td>
+</tr>
+<tr class="even">
+<td>Game ends when a user has won, and this is communicated to the user</td>
+<td>2 points</td>
+</tr>
+<tr class="odd">
+<td>String representation of game board clearly communicates the state of the game</td>
+<td>2 points</td>
+</tr>
+<tr class="even">
+<td>Check-in post</td>
+<td>1.5 points</td>
+</tr>
+<tr class="odd">
+<td>Pieces move correctly based on user input</td>
+<td>1.5 points</td>
+</tr>
+<tr class="even">
+<td><code>CoinStrip.java</code> compiles without warnings</td>
+<td>1 points</td>
+</tr>
+<tr class="odd">
+<td>Correct submission format (a file named <code>CoinStrip.java</code>)</td>
+<td>1 point</td>
+</tr>
+</tbody>
+</table>
+<section class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>Adapted from Bill Lenhart and Bill K. Jannen, <a href="https://williams-cs.github.io/cs136-f20-www/labs/coinstrip.html" class="uri">https://williams-cs.github.io/cs136-f20-www/labs/coinstrip.html</a><a href="#fnref1" class="footnote-back">↩</a></p></li>
+<li id="fn2"><p>What strategy might you use to pick a random number of coins such that there is a 50 percent chance of a game with three coins, a 25 percent chance of a game with four coins, a 12.5 percent chance of a game with five coins, and so on? (You are not required to implement this strategy in your Coinstrip game, but after you’ve concretely described the strategy in text, writing the code to implement it is often the easy part)<a href="#fnref2" class="footnote-back">↩</a></p></li>
+</ol>
+</section>
+</body>
+</html>

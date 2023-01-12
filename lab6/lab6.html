@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Aaron Bauer" />
+  <meta name="dcterms.date" content="2022-02-18" />
+  <title>Lab 6: k-d Tree</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        background-color: #fffcf5;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {  background-color: #fffcf5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ef2929; background-color: #fffcf5; } /* Alert */
+    code span.an { color: #8f5902; background-color: #fffcf5; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #c4a000; background-color: #fffcf5; } /* Attribute */
+    code span.bn { color: #0000cf; background-color: #fffcf5; } /* BaseN */
+    code span.cf { color: #006fe0; background-color: #fffcf5; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #d0372d; background-color: #fffcf5; } /* Char */
+    code span.cn { color: #d0372d; background-color: #fffcf5; } /* Constant */
+    code span.co { color: #8d8d84; background-color: #fffcf5; } /* Comment */
+    code span.cv { color: #8d8d84; background-color: #fffcf5; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #8d8d84; background-color: #fffcf5; font-weight: bold; font-style: italic; } /* Documentation */
+    code span.dt { color: #6434a3; background-color: #fffcf5; } /* DataType */
+    code span.dv { color: #0000cf; background-color: #fffcf5; } /* DecVal */
+    code span.er { color: #a40000; background-color: #fffcf5; font-weight: bold; } /* Error */
+    code span.ex { background-color: #fffcf5; } /* Extension */
+    code span.fl { color: #d0372d; background-color: #fffcf5; } /* Float */
+    code span.fu { color: #006699; background-color: #fffcf5; } /* Function */
+    code span.im { background-color: #fffcf5; } /* Import */
+    code span.in { color: #8f5902; background-color: #fffcf5; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #0000ff; background-color: #fffcf5; font-weight: bold; } /* Keyword */
+    code span.op { color: #006fe0; background-color: #fffcf5; font-weight: bold; } /* Operator */
+    code span.ot { color: #8f5902; background-color: #fffcf5; } /* Other */
+    code span.pp { color: #808080; background-color: #fffcf5; font-style: italic; } /* Preprocessor */
+    code span.sc { color: #000000; background-color: #fffcf5; } /* SpecialChar */
+    code span.ss { color: #4e9a06; background-color: #fffcf5; } /* SpecialString */
+    code span.st { color: #008000; background-color: #fffcf5; } /* String */
+    code span.va { color: #ba36a5; background-color: #fffcf5; } /* Variable */
+    code span.vs { color: #4e9a06; background-color: #fffcf5; } /* VerbatimString */
+    code span.wa { color: #8f5902; background-color: #fffcf5; font-weight: bold; font-style: italic; } /* Warning */
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="lab-style.css" />
+  <link rel="apple-touch-icon" sizes="180x180" href="./media/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="./media/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="./media/favicon-16x16.png">
+  <link rel="manifest" href="./media/site.webmanifest">
+
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Lab 6: k-d Tree</h1>
+<p class="author">Aaron Bauer</p>
+<p class="date">February 18, 2022</p>
+</header>
+<!-- pandoc -s -c lab-style.css -H lab-header.html --highlight-style highlight-style.theme lab6.md -o lab6.html -->
+<div class="wrapper">
+<h1 id="lab-6-k-d-tree1">Lab 6: <em>k</em>-d Tree<a href="#fn1"
+class="footnote-ref" id="fnref1"
+role="doc-noteref"><sup>1</sup></a></h1>
+<ul>
+<li><strong>Assigned:</strong> Friday, February 18</li>
+<li><strong>Check-in Post:</strong> Before 9pm Thursday, February 24 (<a
+href="https://moodle.carleton.edu/mod/forum/view.php?id=719096">check-in
+forum</a>)</li>
+<li><strong>Due:</strong> 9pm Wednesday, March 02</li>
+<li><strong>Collaboration:</strong> Partner assignment (groups of 2
+people—you may also work alone)</li>
+<li><strong>Handout:</strong> <a
+href="./handouts/lab6-handout.zip">starter project</a></li>
+<li><strong>Submit:</strong> Upload <code>KdTree.java</code> to <a
+href="https://moodle.carleton.edu/mod/assign/view.php?id=719081">Lab
+6</a>. If you attempt any <a href="#challenges">Challenges</a> upload a
+text file named <code>challenges.txt</code> describing what you
+did.</li>
+<li><strong>Reference:</strong>
+<ul>
+<li><a
+href="https://cs.carleton.edu/faculty/awb/cs201/w22/notes/trees-bst.html">Binary
+Search Trees</a></li>
+<li><a
+href="https://cs.carleton.edu/faculty/awb/cs201/w22/notes/trees-traversals.html">Tree
+Traversals</a></li>
+<li><a
+href="https://cs.carleton.edu/faculty/awb/cs201/w22/notes/trees/BST.java">BST.java</a></li>
+<li><a
+href="https://cs.carleton.edu/faculty/awb/cs201/w22/notes/trees-kd.html">Trees
+for Multidimensional Data</a></li>
+<li><a
+href="https://docs.microsoft.com/en-us/visualstudio/liveshare/use/vscode">VS
+Code Live Share</a>—useful for remote pair programming in VS Code</li>
+</ul></li>
+</ul>
+<h2 id="overview">Overview</h2>
+<p>In this lab you will implement a binary search tree for
+two-dimensional data. In particular, you will implement a <em>k</em>-d
+tree that uses 2D points as the keys (i.e., <span
+class="math inline"><em>k</em> = 2</span>). This 2d-tree will support
+efficient range search (find all of the points contained in a query
+rectangle) and nearest-neighbor search (find a closest point to a query
+point). 2d-trees have numerous applications, ranging from classifying
+astronomical objects and computer animation to speeding up neural
+networks and data mining.</p>
+<div class="centered">
+<p><img src="./media/lab6/kdtree-ops.png" style="width: 70%;" /></p>
+</div>
+<p>The goals for this lab are</p>
+<ul>
+<li>Practice writing recursive tree operations</li>
+<li>Implement a useful data structure that standard libraries (including
+Java’s) do not provide</li>
+<li>Sharpen your programming skills by implementing some clever
+optimizations</li>
+</ul>
+<h2 id="preparatory-exercises">Preparatory Exercises</h2>
+<ol type="1">
+<li>Work through the practice problems from <a
+href="https://cs.carleton.edu/faculty/awb/cs201/w22/notes/trees-kd.html">Trees
+for Multidimensional Data</a>. There is a nice <a
+href="https://www.youtube.com/watch?v=c_KIuD_mvEU">video walkthrough</a>
+you can watch.</li>
+<li>Read this entire writeup</li>
+<li>Download the <a href="./handouts/lab6-handout.zip">starter
+project</a>, unzip it into its own folder, and open that folder in VS
+Code.</li>
+</ol>
+<h2 id="suggested-timeline">Suggested Timeline</h2>
+<ul>
+<li>Implement <code>contains</code>, <code>get</code>, and an initial
+version of <code>put</code> by Wednesday, 2/23. Test by by writing your
+own <code>main</code> method in <code>KdTree.java</code>.</li>
+<li>Implement the <code>points</code> method by Friday, 2/25. Test using
+<code>KdTreeVisualizer.java</code>.</li>
+<li>Implement the <code>range</code> method by Monday, 2/28. Test using
+<code>RangeSearchVisualizer.java</code>.</li>
+<li>Implement the <code>nearest</code> method by Wednesday, 3/2. Test
+using <code>NearestNeighborVisualizer.java</code>.</li>
+</ul>
+<h2 id="geometric-objects">Geometric Objects</h2>
+<p>You will use the <code>Point2D</code> and <code>RectHV</code> classes
+from <code>algs4</code> to represent two-dimensional points and
+rectangles for this lab.</p>
+<p>The <a
+href="https://algs4.cs.princeton.edu/code/javadoc/edu/princeton/cs/algs4/Point2D.html">Point2D</a>
+class (part of algs4) represents points in the plane. Here is the subset
+of its API that you may use:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode java"><code class="sourceCode java"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span> <span class="kw">class</span> <span class="bu">Point2D</span> <span class="kw">implements</span> <span class="bu">Comparable</span><span class="op">&lt;</span><span class="bu">Point2D</span><span class="op">&gt;</span> <span class="op">{</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">// construct the point (x, y)</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> <span class="bu">Point2D</span><span class="op">(</span><span class="dt">double</span> x<span class="op">,</span> <span class="dt">double</span> y<span class="op">)</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">// x-coordinate </span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> <span class="dt">double</span> <span class="fu">x</span><span class="op">()</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="co">// y-coordinate </span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> <span class="dt">double</span> <span class="fu">y</span><span class="op">()</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="co">// square of Euclidean distance between two points </span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> <span class="dt">double</span> <span class="fu">distanceSquaredTo</span><span class="op">(</span><span class="bu">Point2D</span> that<span class="op">)</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="co">// does this point equal that object? </span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> <span class="dt">boolean</span> <span class="fu">equals</span><span class="op">(</span><span class="bu">Object</span> that<span class="op">)</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    <span class="co">// string representation with format (x, y) </span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> <span class="bu">String</span> <span class="fu">toString</span><span class="op">()</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>The class <a
+href="https://algs4.cs.princeton.edu/code/javadoc/edu/princeton/cs/algs4/RectHV.html">RectHV</a>
+(part of algs4) represents axis-aligned rectangles. Here is the subset
+of its API that you may use:</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode java"><code class="sourceCode java"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span> <span class="kw">class</span> RectHV <span class="op">{</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">// construct the rectangle [xmin, xmax] x [ymin, ymax] </span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> <span class="fu">RectHV</span><span class="op">(</span><span class="dt">double</span> xmin<span class="op">,</span> <span class="dt">double</span> ymin<span class="op">,</span> <span class="dt">double</span> xmax<span class="op">,</span> <span class="dt">double</span> ymax<span class="op">)</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">// minimum x-coordinate of rectangle </span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> <span class="dt">double</span> <span class="fu">xmin</span><span class="op">()</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="co">// minimum y-coordinate of rectangle </span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> <span class="dt">double</span> <span class="fu">ymin</span><span class="op">()</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="co">// maximum x-coordinate of rectangle </span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> <span class="dt">double</span> <span class="fu">xmax</span><span class="op">()</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="co">// maximum y-coordinate of rectangle </span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> <span class="dt">double</span> <span class="fu">ymax</span><span class="op">()</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    <span class="co">// does this rectangle contain the point p (either inside or on boundary)? </span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> <span class="dt">boolean</span> <span class="fu">contains</span><span class="op">(</span><span class="bu">Point2D</span> p<span class="op">)</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    <span class="co">// does this rectangle intersect that rectangle (at one or more points)? </span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> <span class="dt">boolean</span> <span class="fu">intersects</span><span class="op">(</span>RectHV that<span class="op">)</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    <span class="co">// square of Euclidean distance from point p to closest point in rectangle </span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> <span class="dt">double</span> <span class="fu">distanceSquaredTo</span><span class="op">(</span><span class="bu">Point2D</span> p<span class="op">)</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    <span class="co">// does this rectangle equal that object? </span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> <span class="dt">boolean</span> <span class="fu">equals</span><span class="op">(</span><span class="bu">Object</span> that<span class="op">)</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>    <span class="co">// string representation with format [xmin, xmax] x [ymin, ymax] </span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> <span class="bu">String</span> <span class="fu">toString</span><span class="op">()</span></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>Here is a diagram of some of the geometric operations
+<code>RectHV</code> provides:</p>
+<div class="centered">
+<p><img src="./media/lab6/RectHV.png" style="width: 70%;" /></p>
+</div>
+<h2 id="specification">Specification</h2>
+<p>Modify the file <code>KdTree.java</code> that uses a 2d-tree to
+implement the API below (these methods are also included in the starter
+file). A 2d-tree is a generalization of a BST to two-dimensional keys.
+The idea is to build a BST with points in the nodes, using the x- and
+y-coordinates of the points as keys in strictly alternating sequence,
+starting with the x-coordinates.</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode java"><code class="sourceCode java"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span> <span class="kw">class</span> KdTree<span class="op">&lt;</span>Value<span class="op">&gt;</span> <span class="op">{</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">// construct an empty 2d-tree of points </span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> <span class="fu">KdTree</span><span class="op">()</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">// is the tree empty? </span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> <span class="dt">boolean</span> <span class="fu">isEmpty</span><span class="op">()</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="co">// number of points</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> <span class="dt">int</span> <span class="fu">size</span><span class="op">()</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="co">// associate the value val with point p</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> <span class="dt">void</span> <span class="fu">put</span><span class="op">(</span><span class="bu">Point2D</span> p<span class="op">,</span> Value val<span class="op">)</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="co">// value associated with point p </span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> Value <span class="fu">get</span><span class="op">(</span><span class="bu">Point2D</span> p<span class="op">)</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    <span class="co">// does the tree contain point p? </span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> <span class="dt">boolean</span> <span class="fu">contains</span><span class="op">(</span><span class="bu">Point2D</span> p<span class="op">)</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    <span class="co">// all points in the tree </span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> <span class="bu">Iterable</span><span class="op">&lt;</span><span class="bu">Point2D</span><span class="op">&gt;</span> <span class="fu">points</span><span class="op">()</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    <span class="co">// all points that are inside the rectangle (or on the boundary) </span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> <span class="bu">Iterable</span><span class="op">&lt;</span><span class="bu">Point2D</span><span class="op">&gt;</span> <span class="fu">range</span><span class="op">(</span>RectHV rect<span class="op">)</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    <span class="co">// a nearest neighbor of point p; null if the tree is empty </span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> <span class="bu">Point2D</span> <span class="fu">nearest</span><span class="op">(</span><span class="bu">Point2D</span> p<span class="op">)</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<ul>
+<li><em>Search and insert</em>. The algorithms for search and insert are
+similar to those for BSTs, but at the root we use the x-coordinate (if
+the point to be inserted has a smaller x-coordinate than the point at
+the root, go left; otherwise go right); then at the next level, use the
+y-coordinate (if the point to be inserted has a smaller y-coordinate
+than the point in the node, go left; otherwise go right); then at the
+next level, use the x-coordinate; and so forth.</li>
+</ul>
+<div class="centered">
+<p><img src="./media/lab6/kdtree-insert.png" style="width: 100%;" /></p>
+</div>
+<ul>
+<li><em>Level-order traversal</em>. The <code>points()</code> method
+must return the points in level order: first the root, then all children
+of the root (from left/bottom to right/top), then all grandchildren of
+the root (from left to right), and so forth. The level-order traversal
+of the above 2d-tree is (0.7, 0.2), (0.5, 0.4), (0.9, 0.6), (0.2, 0.3),
+(0.4, 0.7). This method is useful to assist you (when debugging) and us
+(when grading).</li>
+</ul>
+<p>The prime advantage of a 2d-tree over a BST is that it supports
+efficient implementation of range search and nearest-neighbor search.
+Each node corresponds to an axis-aligned rectangle, which encloses all
+of the points in its subtree. The root corresponds to the entire plane;
+the left and right children of the root correspond to the two rectangles
+split by the x-coordinate of the point at the root; and so forth.</p>
+<ul>
+<li><p><em>Range search</em>. To find all points contained in a given
+query rectangle, start at the root and recursively search for points in
+both subtrees using the following pruning rule: if the query rectangle
+does not intersect the rectangle corresponding to a node, there is no
+need to explore that node (or its subtrees). That is, search a subtree
+only if it might contain a point contained in the query
+rectangle.</p></li>
+<li><p><em>Nearest-neighbor search</em>. To find a closest point to a
+given query point, start at the root and recursively search in both
+subtrees using the following pruning rule: if the closest point
+discovered so far is closer than the distance between the query point
+and the rectangle corresponding to a node, there is no need to explore
+that node (or its subtrees). That is, search a node only if it might
+contain a point that is closer than the best one found so far.</p></li>
+</ul>
+<h2 id="implementation-advice">Implementation Advice</h2>
+<p><em>Node data type</em>. There are several reasonable ways to
+represent a node in a 2d-tree. One approach is to include the point, a
+link to the left/bottom subtree, a link to the right/top subtree, and an
+axis-aligned rectangle corresponding to the node. (Note the code below
+does not include a constructor.)</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode java"><code class="sourceCode java"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">private</span> <span class="kw">class</span> <span class="bu">Node</span> <span class="op">{</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>   <span class="kw">private</span> <span class="bu">Point2D</span> p<span class="op">;</span>     <span class="co">// the point</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>   <span class="kw">private</span> Value val<span class="op">;</span>     <span class="co">// the tree maps the point to this value</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>   <span class="kw">private</span> RectHV rect<span class="op">;</span>   <span class="co">// the axis-aligned rectangle corresponding to this node</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>   <span class="kw">private</span> <span class="bu">Node</span> lb<span class="op">;</span>       <span class="co">// the left/bottom subtree</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>   <span class="kw">private</span> <span class="bu">Node</span> rt<span class="op">;</span>       <span class="co">// the right/top subtree</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>Here are some suggestions for how you might make progress on
+<code>KdTree.java</code>:</p>
+<ol type="1">
+<li><p>Write <code>isEmpty()</code> and <code>size()</code>. These
+should be very easy.</p></li>
+<li><p>Write a simplified version of <code>put()</code> which does
+everything except set up the <code>RectHV</code> for each node. Write
+the <code>get()</code> and <code>contains()</code> methods, and use
+these to test that <code>put()</code> was implemented properly. Note
+that <code>put()</code> and <code>get()</code> are best implemented by
+using private helper methods analogous to those found in <a
+href="https://cs.carleton.edu/faculty/awb/cs201/w22/notes/trees/BST.java">BST.java</a>.
+I recommend using the orientation (vertical or horizontal) as an
+argument to these helper methods (a <code>boolean</code> like
+<code>isVertical</code> works nicely).</p>
+<p>A common error is to not rely on your base case (or cases). For
+example, compare the following two <code>get()</code> methods for
+searching in a BST:</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode java"><code class="sourceCode java"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">private</span> Value <span class="fu">get</span><span class="op">(</span><span class="bu">Node</span> root<span class="op">,</span> <span class="bu">Key</span> key<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>root <span class="op">==</span> <span class="kw">null</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="kw">null</span><span class="op">;</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> cmp <span class="op">=</span> key<span class="op">.</span><span class="fu">compareTo</span><span class="op">(</span>root<span class="op">.</span><span class="fu">key</span><span class="op">);</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>cmp <span class="op">&lt;</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="fu">get</span><span class="op">(</span>root<span class="op">.</span><span class="fu">left</span><span class="op">,</span> key<span class="op">);</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span> <span class="cf">else</span> <span class="cf">if</span> <span class="op">(</span>cmp <span class="op">&gt;</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="fu">get</span><span class="op">(</span>root<span class="op">.</span><span class="fu">right</span><span class="op">,</span> key<span class="op">);</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> root<span class="op">.</span><span class="fu">value</span><span class="op">;</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode java"><code class="sourceCode java"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">private</span> Value <span class="fu">overlyComplicatedGet</span><span class="op">(</span><span class="bu">Node</span> root<span class="op">,</span> <span class="bu">Key</span> key<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>root <span class="op">==</span> <span class="kw">null</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="kw">null</span><span class="op">;</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> cmp <span class="op">=</span> key<span class="op">.</span><span class="fu">compareTo</span><span class="op">(</span>root<span class="op">.</span><span class="fu">key</span><span class="op">);</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>cmp <span class="op">&lt;</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(</span>root<span class="op">.</span><span class="fu">left</span> <span class="op">==</span> <span class="kw">null</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> <span class="kw">null</span><span class="op">;</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> <span class="fu">overlyComplicatedGet</span><span class="op">(</span>root<span class="op">.</span><span class="fu">left</span><span class="op">,</span> key<span class="op">);</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span> <span class="cf">else</span> <span class="cf">if</span> <span class="op">(</span>cmp <span class="op">&gt;</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(</span>root<span class="op">.</span><span class="fu">right</span> <span class="op">==</span> <span class="kw">null</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> <span class="kw">null</span><span class="op">;</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> <span class="fu">overlyComplicatedGet</span><span class="op">(</span>root<span class="op">.</span><span class="fu">right</span><span class="op">,</span> key<span class="op">);</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> root<span class="op">.</span><span class="fu">value</span><span class="op">;</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>In the latter method, extraneous <code>null</code> checks are made
+that would otherwise be caught by the base case. Trust in the base case.
+Your method may have additional base cases, and code like this becomes
+harder and harder to read and debug.</p></li>
+<li><p>Implement the <code>points()</code> method. Use this to check the
+structure of your k-d tree.</p></li>
+<li><p>Add code to <code>put()</code> which sets up the
+<code>RectHV</code> for each Node.</p></li>
+<li><p>Write the <code>range()</code> method. Test your implementation
+using <code>RangeSearchVisualizer.java</code>, which is described in the
+<a href="#testing">Testing</a> section.</p></li>
+<li><p>Write the <code>nearest()</code> method. This is the hardest
+method. I recommend doing it in two stages, testing after each.</p>
+<ul>
+<li>First, find the nearest neighbor without pruning. That is, always
+explore both subtrees. Moreover, always explore the left subtree before
+the right subtree.</li>
+<li>Next, implementing the pruining rule: if the closest point
+discovered so far is closer than the distance between the query point
+and the rectangle corresponding to a node, there is no need to explore
+that node (or its subtrees).</li>
+</ul>
+<p>Test your implementation using
+<code>NearestNeighborVisualizer.java</code>, which is described in the
+<a href="#testing">Testing</a> section.</p></li>
+</ol>
+<h3 id="qa">Q&amp;A</h3>
+<p><strong>Is a point on the boundary of a rectangle considered inside
+it? Do two rectangle intersect if they have just one point in
+common?</strong> Yes and yes, consistent with the implementation of <a
+href="https://algs4.cs.princeton.edu/code/javadoc/edu/princeton/cs/algs4/RectHV.html">RectHV.java</a>.</p>
+<p><strong>Can I use the <code>distanceTo()</code> method in
+<code>Point2D</code> and <code>RectHV</code>?</strong> No, you may use
+only the subset of the methods listed. You should be able to accomplish
+the same result (more efficiently) with
+<code>distanceSquaredTo()</code>.</p>
+<p><strong>What should I do if a point is inserted twice in the data
+structure?</strong> The data structure represents a map, so you should
+replace the old value with the new value.</p>
+<p><strong>What should <code>points()</code> return if there are no
+points in the data structure? What should <code>range()</code> return if
+there are no points in the range?</strong> The API says to return an
+<code>Iterable&lt;Point2D&gt;</code>, so you should return an iterable
+with zero points.</p>
+<p><strong>What should <code>nearest()</code> return if there are two
+(or more) nearest points?</strong> The API does not specify, so you may
+return any nearest point.</p>
+<h2 id="testing">Testing</h2>
+<p><strong>Testing <code>put()</code> and <code>points()</code> in
+<code>KdTree</code></strong>. The file
+<code>KdTreeVisualizer.java</code> reads a sequence of points from a
+file (given as a command-line argument) and draws the corresponding k-d
+tree. It does so by reconstructing the k-d tree from the level-order
+traversal returned by <code>points()</code>. Note that it assumes all
+points are inside the unit square (coordinates between 0 and 1).
+Included in the starter project are a number of sample input files and
+corresponding png files showing the expected visualization. The starter
+project is configure to prompt you for a command line argument when
+running any of the testing files. You should see a box pop up at the top
+of the window prompting you to enter program arguments. Enter the name
+of one of the <code>.txt</code> files included in the starter project
+(e.g., input10.txt). For a number of them, the expected output is
+included as a <code>.png</code> of the same name.</p>
+<div class="centered">
+<p><img src="./media/lab6/kdtree-testing.png"
+style="width: 100%;" /></p>
+</div>
+<p><strong>Testing <code>range()</code> and <code>nearest()</code> in
+KdTree</strong>. Often a good way to test code is to perform the same
+sequence of operations on a new implementation (your
+<code>KdTree</code>) and an existing, trusted implementation (the
+provided <code>PointMap</code>), and identify any discrepancies.
+<code>PointMap</code> is a simple but inefficient map for 2d points that
+uses Java’s <code>TreeMap</code> to implement all the same methods you
+are implementing for <code>KdTree</code>. The key idea is to implement a
+reference solution in which you have confidence. The simplicity of
+<code>PointMap</code> allows it to serve this purpose in your
+testing.</p>
+<ul>
+<li>The file <code>RangeSearchVisualizer.java</code> reads a sequence of
+points from a file (given as a command-line argument) and draws them to
+standard drawing. It also highlights the points inside the rectangle
+that the user selects by dragging the mouse. Specifically, it colors red
+the points returned by the method <code>range()</code> in
+<code>PointMap</code> and blue the points returned by the method
+<code>range()</code> in <code>KdTree</code>.</li>
+<li>The client <code>NearestNeighborVisualizer.java</code> reads a
+sequence of points from a file (given as a command-line argument) and
+draws them to standard drawing. It also highlights the point closest to
+the mouse. Specifically, it colors red the point returned by the method
+<code>nearest()</code> in <code>PointMap</code> and blue the point
+returned by the method <code>nearest()</code> in
+<code>KdTree</code>.</li>
+</ul>
+<p>Warning: both of these clients will be slow for large inputs because
+(1) the methods in the <code>PointMap</code> implementation are slow and
+(2) drawing the points is slow.</p>
+<p>To test whether you are pruning correctly in <code>range</code> and
+<code>nearest</code>, you can write code in your <code>KdTree</code>
+<code>main</code> method to compare the speed of <code>KdTree</code> and
+<code>PointMap</code>. Correct pruning will cause <code>KdTree</code> to
+be significantly faster. In my own tests, <code>KdTree</code>’s
+<code>range</code> is twice as fast without pruning, and more than 10
+times as fast with pruning. <code>nearest</code> is more dramatic,
+outperforming <code>PointMap</code> by a factor of more than 1000 with
+the pruning rule described in <a
+href="#specification">Specification</a>. The first optimization
+described in the <a href="#challenges">Challenges</a> section should
+make <code>nearest</code> a further 20 times faster.</p>
+<p>How do should you measure the performance of a method? Here is one
+reasonable approach.</p>
+<ul>
+<li>Read the file <code>input1M.txt</code> and insert those 1 million
+points into the k-d tree (and/or <code>PointMap</code>), using integers
+as the values.</li>
+<li>Count the number of calls <em>m</em> to <code>nearest</code> (or
+whatever method you’re testing) with random points in the unit square
+that occur in <em>t</em> seconds (i.e.,
+<code>while(timer.elapsedTime() &lt; t)</code>). You can use <a
+href="https://algs4.cs.princeton.edu/code/javadoc/edu/princeton/cs/algs4/StopwatchCPU.html">StopwatchCPU</a>.</li>
+<li>Use (m/t) as an estimate of the number of calls per second.</li>
+</ul>
+<p>To get a reliable estimate, choose a <em>t</em> that is neither
+negligible (e.g., less than 1 second) or astronomical (e.g., more than 1
+hour). When measuring the CPU time, Do not include the time to read in
+the 1 million points or construct the k-d tree.</p>
+<p>How do you generate a uniformly random point in the unit square? Make
+two calls to <code>StdRandom.uniform(0.0, 1.0)</code>—one for the
+x-coordinate and one for the y-coordinate.</p>
+<h2 id="style">Style</h2>
+<p>You are expected to submit files that contains no
+<code>checkstyle</code> errors <em>or warnings</em>. You will lose 0.5
+points per error (up to a maximum of 3) and per warning (up to a maximum
+of 2), as indicated in the <a href="#grading">Grading</a> breakdown.</p>
+<h2 id="challenges">Challenges</h2>
+<p>Consider attempting any or all of these additional challenges if you
+have time:</p>
+<ul>
+<li><strong>Optimizations</strong> (up to 2 points).
+<ul>
+<li>(1 point) The effectiveness of the pruning rule for
+<code>nearest</code> depends on quickly finding a nearby point. To do
+this, organize the recursive method so that when there are two possible
+subtrees to go down, you choose first the subtree that is on the same
+side of the splitting line as the query point; the closest point found
+while exploring the first subtree may enable pruning of the second
+subtree.</li>
+<li>(0.5 points) For <code>range</code>, instead of checking whether the
+query rectangle intersects the rectangle corresponding to a node, it
+suffices to check only whether the query rectangle intersects the
+splitting line segment: if it does, then recursively search both
+subtrees; otherwise, recursively search the one subtree where points
+intersecting the query rectangle could be.</li>
+<li>(0.5 points) You are not required to explicitly store a
+<code>RectHV</code> in each 2d-tree node (though it is probably wise in
+your first version). Save memory by only storing the splitting line
+segment (i.e., a min and a max coordinate, where the axis of those
+coordinates is implicitly determined by the level of the node in the
+tree).</li>
+</ul></li>
+<li><strong>Nearest k points</strong> (1 point). Add this method to
+<code>KdTree.java</code>:
+<code>public Iterable&lt;Point2D&gt; nearest(Point2D p, int k)</code>.
+This method returns the <em>k</em> points that are closest to the query
+point (in any order); return all <em>n</em> points in the tree if <span
+class="math inline"><em>n</em> ≤ <em>k</em></span>. It must do this in
+an efficient manner, (i.e., using the technique from k-d tree nearest
+neighbor search, not from brute force). Once you’ve completed this
+method (and the first of the optimizations above), you’ll be able to run
+<code>BoidSimulator.java</code> (which depends upon both
+<code>Boid.java</code> and <code>Hawk.java</code>). Behold their
+flocking majesty.</li>
+<li><strong>Building a balanced k-d tree</strong> (1 point). Implement a
+method
+<code>public static KdTree buildTree(List&lt;Point2D&gt; points)</code>
+that takes in a list of points and constructs and returns a new
+<em>balanced</em> <code>KdTree</code>. An approach for constructing a
+balanced tree is described <a
+href="https://en.wikipedia.org/wiki/K-d_tree#Construction">here</a>.
+Include in your submission evidence that your <code>buildTree</code>
+constructs a correct and balanced k-d tree (e.g., write a
+<code>main</code> method that uses it, prints out the height, and shows
+a correct level-order traversal).</li>
+</ul>
+<h2 id="grading">Grading</h2>
+<p>This lab will be graded out of 40 points as shown below. See the <a
+href="#testing">Testing</a> section for advice on how to evaluate
+whether your implementation is correct. Partial credit will be awarded
+based on evidence of a good-faith effort to implement the related
+features. Comments explaining your approach can help earn partial
+credit.</p>
+<table>
+<colgroup>
+<col style="width: 90%" />
+<col style="width: 9%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Requirement</th>
+<th>Points</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>points</code> method returns correct level-order
+traversal</td>
+<td>10 points</td>
+</tr>
+<tr class="even">
+<td><code>range</code> method returns correct points</td>
+<td>5 points</td>
+</tr>
+<tr class="odd">
+<td><code>nearest</code> method returns correct point</td>
+<td>5 points</td>
+</tr>
+<tr class="even">
+<td>Correct pruning in <code>range</code> method</td>
+<td>5 points</td>
+</tr>
+<tr class="odd">
+<td>Correct pruning in <code>nearest</code> method</td>
+<td>5 points</td>
+</tr>
+<tr class="even">
+<td>Submitted files do not have any <code>checkstyle</code> errors</td>
+<td>3 points</td>
+</tr>
+<tr class="odd">
+<td>Submitted files do not have any <code>checkstyle</code>
+warnings</td>
+<td>2 points</td>
+</tr>
+<tr class="even">
+<td>Check-in post</td>
+<td>2 points</td>
+</tr>
+<tr class="odd">
+<td><code>KdTree.java</code> compiles without warnings</td>
+<td>0.5 points</td>
+</tr>
+<tr class="even">
+<td>Correct submission format (<code>KdTree.java</code>)</td>
+<td>0.5 points</td>
+</tr>
+<tr class="odd">
+<td>Challenges</td>
+<td>up to 4 points</td>
+</tr>
+</tbody>
+</table>
+<section class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1" role="doc-endnote"><p>Adapted from Kevin Wayne and Josh
+Hug: <a
+href="https://www.cs.princeton.edu/courses/archive/fall20/cos226/assignments/kdtree/specification.php"
+class="uri">https://www.cs.princeton.edu/courses/archive/fall20/cos226/assignments/kdtree/specification.php</a><a
+href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+</body>
+</html>

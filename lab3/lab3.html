@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Aaron Bauer" />
+  <meta name="dcterms.date" content="2022-01-22" />
+  <title>Lab 3: P.S. It’s Just a Stack!</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        background-color: #fffcf5;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {  background-color: #fffcf5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ef2929; background-color: #fffcf5; } /* Alert */
+    code span.an { color: #8f5902; background-color: #fffcf5; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #c4a000; background-color: #fffcf5; } /* Attribute */
+    code span.bn { color: #0000cf; background-color: #fffcf5; } /* BaseN */
+    code span.cf { color: #006fe0; background-color: #fffcf5; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #d0372d; background-color: #fffcf5; } /* Char */
+    code span.cn { color: #d0372d; background-color: #fffcf5; } /* Constant */
+    code span.co { color: #8d8d84; background-color: #fffcf5; } /* Comment */
+    code span.cv { color: #8d8d84; background-color: #fffcf5; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #8d8d84; background-color: #fffcf5; font-weight: bold; font-style: italic; } /* Documentation */
+    code span.dt { color: #6434a3; background-color: #fffcf5; } /* DataType */
+    code span.dv { color: #0000cf; background-color: #fffcf5; } /* DecVal */
+    code span.er { color: #a40000; background-color: #fffcf5; font-weight: bold; } /* Error */
+    code span.ex { background-color: #fffcf5; } /* Extension */
+    code span.fl { color: #d0372d; background-color: #fffcf5; } /* Float */
+    code span.fu { color: #006699; background-color: #fffcf5; } /* Function */
+    code span.im { background-color: #fffcf5; } /* Import */
+    code span.in { color: #8f5902; background-color: #fffcf5; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #0000ff; background-color: #fffcf5; font-weight: bold; } /* Keyword */
+    code span.op { color: #006fe0; background-color: #fffcf5; font-weight: bold; } /* Operator */
+    code span.ot { color: #8f5902; background-color: #fffcf5; } /* Other */
+    code span.pp { color: #808080; background-color: #fffcf5; font-style: italic; } /* Preprocessor */
+    code span.sc { color: #000000; background-color: #fffcf5; } /* SpecialChar */
+    code span.ss { color: #4e9a06; background-color: #fffcf5; } /* SpecialString */
+    code span.st { color: #008000; background-color: #fffcf5; } /* String */
+    code span.va { color: #ba36a5; background-color: #fffcf5; } /* Variable */
+    code span.vs { color: #4e9a06; background-color: #fffcf5; } /* VerbatimString */
+    code span.wa { color: #8f5902; background-color: #fffcf5; font-weight: bold; font-style: italic; } /* Warning */
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="lab-style.css" />
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+  <link rel="apple-touch-icon" sizes="180x180" href="./media/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="./media/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="./media/favicon-16x16.png">
+  <link rel="manifest" href="./media/site.webmanifest">
+
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Lab 3: P.S. It’s Just a Stack!</h1>
+<p class="author">Aaron Bauer</p>
+<p class="date">January 22, 2022</p>
+</header>
+<!-- pandoc -s -c lab-style.css -H lab-header.html --highlight-style highlight-style.theme lab3.md -o lab3.html -->
+<div class="wrapper">
+<h1 id="lab-3-p.s.-its-just-a-stack1">Lab 3: P.S. It’s Just a Stack!<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></h1>
+<ul>
+<li><strong>Assigned:</strong> Monday, January 24</li>
+<li><strong>Check-in Post:</strong> Before 9pm Thursday, January 27 (<a href="https://moodle.carleton.edu/mod/forum/view.php?id=719090">check-in forum</a>)</li>
+<li><strong>Due:</strong> 9pm Monday, January 31</li>
+<li><strong>Collaboration:</strong> Partner assignment (groups of 2 people—you may also work alone)</li>
+<li><strong>Handout:</strong> <a href="./handouts/lab3-handout.zip">starter project</a></li>
+<li><strong>Submit:</strong> Upload <code>Interpreter.java</code> to <a href="https://moodle.carleton.edu/mod/assign/view.php?id=719078">Lab 3</a>.</li>
+<li><strong>Reference:</strong>
+<ul>
+<li><a href="./notes/stacks-queues.html">Stacks &amp; Queues</a></li>
+<li><a href="./notes/iterators.html">Iterators</a></li>
+</ul></li>
+</ul>
+<h2 id="overview">Overview</h2>
+<p>In this lab we will investigate a small portion of a stack-based language called PostScript. PostScript is a file format often used with printers. In fact, the file you send to your printer is a program that instructs your printer to draw the appropriate output. PostScript is stack-based: integral to the language is an operand stack. Each operation that is executed pops its operands from the stack and pushes on a result. There are other notable examples of stack-based languages, including <code>forth</code>, a language commonly used by astronomers to program telescopes. If you have an old Hewlett-Packard calculator, it likely uses a stack-based input mechanism to perform calculations. You will implement a some of the operators available in PostScript, including arithmetic, numerical comparisons, and defining symbols. For more about PostScript, see the <a href="#discussion">Discussion</a> section.</p>
+<p>The goals for this lab are</p>
+<ul>
+<li>Practice using stack operations to implement a subset of the stack-based language <em>PostScript</em></li>
+<li>Practice reading javadoc-style documentation to learn how to use classes you didn’t write</li>
+<li>Practice breaking up a class implementation into methods</li>
+</ul>
+<h2 id="preparatory-exercises">Preparatory Exercises</h2>
+<ol type="1">
+<li>Read the rest of this writeup, paying particular attention to the <a href="#discussion">Discussion</a> section examples of how PostScript works. I also demo these in the video below.</li>
+<li>Look over the documentation for the <a href="./handouts/lab3/javadoc/Token.html">Token</a> and <a href="./handouts/lab3/javadoc/Reader.html">Reader</a> classes your PostScript interpreter will use.</li>
+<li>Watch the introductory video. Follow along to get started on your <code>processToken</code> method and see how a <code>switch</code> statement is used.</li>
+</ol>
+<h3 id="introductory-video">Introductory Video</h3>
+<p><a href="https://carleton.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=d012b19c-e9ce-4ff6-84ad-acba01890e19">Panopto viewer link</a></p>
+<iframe src="https://carleton.hosted.panopto.com/Panopto/Pages/Embed.aspx?id=d012b19c-e9ce-4ff6-84ad-acba01890e19&amp;autoplay=false&amp;offerviewer=true&amp;showtitle=true&amp;showbrand=false&amp;start=0&amp;interactivity=all" height="563" width="1000" style="border: 1px solid #464646;" allowfullscreen allow="autoplay">
+</iframe>
+<h2 id="suggested-timeline">Suggested Timeline</h2>
+<ul>
+<li><a href="#preparatory-exercises">Preparatory Exercises</a> and steps 1 through 3 of <a href="#procedure">Procedure</a> by Wednesday</li>
+<li>Steps 4 through 7 of <a href="#procedure">Procedure</a> by Friday</li>
+<li>Steps 8 through 11 of <a href="#procedure">Procedure</a> by Monday</li>
+</ul>
+<div class="box alert_box">
+<div class="warning">
+Final Steps
+</div>
+<p>Steps 12 and 13 will likely be challenging and are only worth 2 points of the final grade.</p>
+</div>
+<h2 id="discussion">Discussion</h2>
+<p>To get a sense of how PostScript works, it will be helpful to see some examples:</p>
+<ol type="1">
+<li>The following program computes <span class="math inline">1 + 1</span>:
+<div class="sourceCode">
+<pre class="sourcecode"><code>1 1 add pstack</code></pre>
+</div>
+Every item you type in is a <em>token</em>. Tokens include numbers, booleans, or symbols. Here, we’ve typed in two numeric tokens, followed by two symbolic tokens. Each number is pushed on the internal stack of operands. When the <code>add</code> token is encountered, it causes PostScript to pop off two values and add them together. The result is pushed back on the stack. (Other mathematical operations include <code>sub</code>, <code>mul</code>, and <code>div</code>.) The <code>pstack</code> command causes the entire stack to be printed, one value per line, from top to bottom. In this case prints <code>2.0</code>.</li>
+<li>Provided the stack contains at least one value, the <code>pop</code> operator can be used to remove it. Thus, the following computes 2 and prints nothing:
+<div class="sourceCode">
+<pre class="sourcecode"><code>1 1 add pop pstack</code></pre>
+</div></li>
+<li>The following program computes <span class="math inline">1 + 3 * 4</span>:
+<div class="sourceCode">
+<pre class="sourcecode"><code>1 3 4 mul add pstack</code></pre>
+</div>
+The result printed here, 13, is different than what is computed by the following program:
+<div class="sourceCode">
+<pre class="sourcecode"><code>1 3 add 4 mul pstack</code></pre>
+</div>
+In this case the addition is performed first, printing 16.</li>
+<li>Some operations simply move values about. You can duplicate values—the following squares the number 10.1 using <code>dup</code> to push a second 10.1 onto the stack:
+<div class="sourceCode">
+<pre class="sourcecode"><code>10.1 dup mul pstack pop</code></pre>
+</div></li>
+<li>The <code>exch</code> operator to exchange two values, computing <span class="math inline">1 − 3</span> with this program:
+<div class="sourceCode">
+<pre class="sourcecode"><code>3 1 exch sub pstack pop</code></pre>
+</div></li>
+<li>Comparison operations compute logical values:
+<div class="sourceCode">
+<pre class="sourcecode"><code>1 2 eq pstack pop</code></pre>
+</div>
+tests for equality of 1 and 2, and puts <code>false</code> on the stack to be printed. The program
+<div class="sourceCode">
+<pre class="sourcecode"><code>1 1 eq pstack pop</code></pre>
+</div>
+yields a value of <code>true</code>.</li>
+<li>Symbols are defined using the <code>def</code> operation. To define a symbolic value we specify a <em>escaped</em> symbol (preceded by a slash) and the value, all followed by the operator def:
+<div class="sourceCode">
+<pre class="sourcecode"><code>/pi 3.141592653 def</code></pre>
+</div>
+Once we define a symbol, we can use it in computations:
+<div class="sourceCode">
+<pre class="sourcecode"><code>/radius 1.6 def
+pi radius dup mul mul pstack pop</code></pre>
+</div>
+computes and prints the area of a circle with radius 1.6. After the pop, the stack is empty.</li>
+</ol>
+<p>To help you implement your PostScript interpreter, the starter project includes three classes you will find useful:</p>
+<ul>
+<li><p><code>Token</code> (<a href="./handouts/lab3/javadoc/Token.html">documentation</a>). An immutable (constant) object that contains a double, boolean, or symbol. Different constructors allow you to construct different <code>Token</code> values. The class also provides methods to determine the type and value of a token.</p></li>
+<li><p><code>Reader</code> (<a href="./handouts/lab3/javadoc/Reader.html">documentation</a>). A class that allows you to read <code>Token</code>s from an input stream (either the terminal or a file). The typical use of a reader is as follows:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode java"><code class="sourceCode java"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="bu">Reader</span> r <span class="op">=</span> <span class="kw">new</span> <span class="bu">Reader</span><span class="op">();</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="cf">while</span> <span class="op">(</span>r<span class="op">.</span><span class="fu">hasNext</span><span class="op">())</span> <span class="op">{</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    Token t <span class="op">=</span> r<span class="op">.</span><span class="fu">next</span><span class="op">();</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">// only check for quit if token is a symbol:</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>t<span class="op">.</span><span class="fu">isSymbol</span><span class="op">()</span> <span class="op">&amp;&amp;</span> t<span class="op">.</span><span class="fu">getSymbol</span><span class="op">().</span><span class="fu">equals</span><span class="op">(</span><span class="st">&quot;quit&quot;</span><span class="op">))</span> <span class="op">{</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">break</span><span class="op">;</span>  <span class="co">// break statement exits the current loop</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    <span class="co">// process token</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>Note the <code>Reader</code> implements the <code>Iterator</code> interface. <code>next</code> always returns a value of type <code>Token</code>.</p></li>
+<li><p><code>SymbolTable</code> (<a href="./handouts/lab3/javadoc/SymbolTable.html">documentation</a>). An object that allows you to keep track of <code>String</code>-<code>Token</code> associations. Here is an example of how to save and recall the value of <span class="math inline"><em>π</em></span>:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode java"><code class="sourceCode java"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>SymbolTable table <span class="op">=</span> <span class="kw">new</span> <span class="fu">SymbolTable</span><span class="op">();</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co">// sometime later:</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>table<span class="op">.</span><span class="fu">add</span><span class="op">(</span><span class="st">&quot;pi&quot;</span><span class="op">,</span><span class="kw">new</span> <span class="fu">Token</span><span class="op">(</span><span class="fl">3.141592653</span><span class="op">));</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co">// sometime even later:</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span>table<span class="op">.</span><span class="fu">contains</span><span class="op">(</span><span class="st">&quot;pi&quot;</span><span class="op">))</span> <span class="op">{</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    Token token <span class="op">=</span> table<span class="op">.</span><span class="fu">get</span><span class="op">(</span><span class="st">&quot;pi&quot;</span><span class="op">);</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">System</span><span class="op">.</span><span class="fu">out</span><span class="op">.</span><span class="fu">println</span><span class="op">(</span>token<span class="op">.</span><span class="fu">getNumber</span><span class="op">());</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>You will use the <code>SymbolTable</code> to implement the PostScript command <code>def</code> (step 11 of <a href="#procedure">Procedure</a>).</p></li>
+</ul>
+<h2 id="procedure">Procedure</h2>
+<p>In this lab you will modify the <code>Interpreter</code> class to implement various PostScript commands.</p>
+<ol type="1">
+<li><p>Download the starter project (<a href="./handouts/lab3-handout.zip">lab3-handout.zip</a>). Unzip it and make sure the files are in their own folder. Open the folder in VS Code.</p></li>
+<li><p>Implement the <code>interpret</code> method. The tests use this method, so you must implement it as it appears in the starter code. The method should be fairly short—it should loop over the tokens in <code>reader</code> until there are not more tokens or it encounters the token <code>"quit"</code>, calling <code>processToken</code> on each one. The <a href="#introductory-video">Introductory Video</a> provides an implementation of this method.</p></li>
+<li><p>For the rest of this procedure you’ll build <code>processToken</code> piece by piece, implementing a few PostScript operations at a time. If you put all the code for every operation in <code>processToken</code>, however, it could run to more than 100 lines of code and become quite unwieldy. Instead, as you implement various commands, create a method for each one and call that method from <code>processToken</code>. This will help keep your <code>Interpreter.java</code> nice and organized.</p></li>
+<li><p>Start by implementing the <code>pstack</code> command. The <a href="#introductory-video">Introductory Video</a> walks through how to set up <code>switch</code> statements for <code>processToken</code> and if you followed along you should already have a <code>case "pstack":</code> and a call to a <code>pstack()</code> method. Write code in the <code>pstack</code> method to iterate over <code>stack</code> and print out each token. The <code>testPstack</code> test should now pass, assuming you are pushing non-symbol tokens to the stack as shown in the <a href="#introductory-video">Introductory Video</a>.</p></li>
+<li><p>Implement the <code>pop</code> command. This should just be another <code>switch</code> case that calls a method. The <code>testPop</code> test should now pass.</p></li>
+<li><p>Implement the arithmetic commands <code>add</code>, <code>sub</code>, <code>mul</code>, and <code>div</code>. Each one should pop two values off the stack and perform the appropriate operation (addition, subtraction, multiplication, division). It’s important to remember that tokens are not the same as the values stored in the tokens. The result should be pushed back on the stack (as a new <code>Token</code>). You’ll want to use the tokens’ <code>getNumber</code> method to get the <code>double</code> they store, and then construct a new <code>Token</code> from the result to push onto the stack. For <code>sub</code> and <code>div</code>, the first value popped off the stack is the <em>right-hand value</em> and the second is the <em>left-hand value</em>. That is, <code>sub</code> should compute <span class="math inline"><em>s</em><em>e</em><em>c</em><em>o</em><em>n</em><em>d</em> − <em>f</em><em>i</em><em>r</em><em>s</em><em>t</em></span> and <code>div</code> should compute <span class="math inline"><em>s</em><em>e</em><em>c</em><em>o</em><em>n</em><em>d</em>/<em>f</em><em>i</em><em>r</em><em>s</em><em>t</em></span>. All these operations can assume there are two numbers on the top of the stack—you don’t need to handle cases where a valid operation cannot be performed. The <code>testArithemetic</code> test should pass once you have implemented all four commands.</p></li>
+<li><p>Implement the boolean commands <code>lt</code>, <code>gt</code>, <code>eq</code> and <code>ne</code>. Each one should pop two values off the stack and perform the appropriate operation (less than, greater than, equal, and not equal). The result should be pushed back on the stack (as a new <code>Token</code>). For <code>lt</code> and <code>gt</code>, the first value popped off the stack is the <em>right-hand value</em> and the second is the <em>left-hand value</em>. That is, <code>ls</code> should compute <span class="math inline"><em>s</em><em>e</em><em>c</em><em>o</em><em>n</em><em>d</em> &lt; <em>f</em><em>i</em><em>r</em><em>s</em><em>t</em></span> and <code>gt</code> should compute <span class="math inline"><em>s</em><em>e</em><em>c</em><em>o</em><em>n</em><em>d</em> &gt; <em>f</em><em>i</em><em>r</em><em>s</em><em>t</em></span>. All these operations can assume there are two values on the top of the stack—you don’t need to handle cases where a valid operation cannot be performed. The <code>testBoolean</code> test should pass once you have implemented all four commands.</p></li>
+<li><p>Implement the <code>dup</code> command. It should push a new token on the stack that is the same as the current top token. This operation can assume there is a value on the top of the stack. The <code>testDup</code> test should now pass.</p></li>
+<li><p>Implement the <code>exch</code> command. It should swap the two values on top of the stack. This operation can assume there is are two values on the top of the stack. The <code>testExch</code> test should now pass.</p></li>
+<li><p>At this point, including style and check-in post, you have earned 25.5 of the 30 points for the lab. The remaining PostScript features in this procedure are likely to be more difficult than their contribution to the lab grade would suggest. By implementing the above steps you have accomplished the main goals for this lab. If you have other pressing responsibilities, it is perfectly fine to stop at this point. See <a href="#grading">Grading</a> for the specific point breakdown.</p></li>
+<li><p>Implement the <code>def</code> command. This has two parts. First, you’ll need to handle symbol tokens that are not one the PostScript commands. Symbols that begin with a slash (e.g., <code>"/pi"</code>) should be pushed on the stack (these are called <em>escaped</em> symbols). For non-escaped symbols, your interpreter should retrieve the associated token from the symbol table (<code>table.get</code>) and process it (by calling <code>processToken</code>). The <code>default</code> case for <code>switch</code> statements will be useful here: <code>default</code> is the code that will be run if the value doesn’t match any other case. For example,</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode java"><code class="sourceCode java"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="cf">switch</span><span class="op">(</span>token<span class="op">.</span><span class="fu">getSymbol</span><span class="op">())</span> <span class="op">{</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">case</span> <span class="st">&quot;add&quot;</span><span class="op">:</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>        <span class="kw">...</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">case</span> <span class="st">&quot;pstack&quot;</span><span class="op">:</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>        <span class="kw">...</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">...</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">default</span><span class="op">:</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>        <span class="co">// put code to handle escaped and non-escaped symbols here</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>You can detect an escaped symbol vs a non-escaped symbol with the <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html#startsWith(java.lang.String)"><code>startsWith</code></a> method for <code>String</code>s. Second, you need to implement the <code>def</code> command itself. It should pop two tokens off the stack and add an entry to the symbol table (<code>table.add</code>). The second token will be a symbol token holding the <code>String</code> that will be associated with the first token in the symbol table. You’ll need to remove the <code>"/"</code> from the string—<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html#substring(int)"><code>substring</code></a> is a convenient way to do this. <code>def</code> does not push anything back onto the stack. The <code>testDef</code> test should now pass.</p></li>
+<li><p>Implement PostScript procedures. A procedure is a series of tokens surrounded by braces (e.g., <code>{ 2 add }</code>). In this step you need to augment your interpreter to handle the definition of functions like <code>area</code> shown below:</p>
+<div class="sourceCode">
+<pre class="sourcecode"><code>/pi 3.141592653 def
+/area { dup mul pi mul } def
+1.6 area
+9 area pstack
+quit</code></pre>
+</div>
+<p>Such a PostScript program defines a new procedure called <code>area</code> that computes <span class="math inline"><em>π</em><em>r</em><sup>2</sup></span> where <span class="math inline"><em>r</em></span> is the value found on the top of the stack when the procedure is called. The result of running this code would be</p>
+<div class="sourceCode">
+<pre class="sourcecode"><code>254.469004893
+8.042477191680002</code></pre>
+</div>
+<p>The <code>Token</code> class reads procedures and stores the procedure’s <code>Token</code>s in a <code>List</code>. Procedure tokens are pushed and popped from the stack like any other, so no changes are needed there. This step is making the procedures execute when they are retrieved from the symbol table. In the previous step, you made it so when a non-command, non-escaped symbol token is processed, the token associated with that string in the symbol table is processed. You now want to add a special case if that token is a procedure: instead of processing the procedure token itself, process the list of tokens stored in the procedure token. The <code>testProc</code> test should now pass.</p></li>
+<li><p>Implement the <code>if</code> command. <code>if</code> pops two values off the stack—a boolean and a token (usually a procedure)—and executes the token if the boolean is <code>true</code>. This would allow the definition of the absolute value function (given a less than operator, <code>lt</code>):</p>
+<div class="sourceCode">
+<pre class="sourcecode"><code>/abs { dup 0 lt { -1 mul } if } def
+3 abs
+-3 abs
+eq pstack</code></pre>
+</div>
+<p>The <code>testCountTo10</code> and <code>testFib</code> tests should now pass.</p></li>
+</ol>
+<h2 id="style">Style</h2>
+<p>For this lab, there are two new checkstyle errors you are responsible for addressing. First, method and variable names should use <em>camel case</em>. This means starting with a lower-case letter and capitalizing each following word, as in <code>doArithemeticOperation</code>. Second, no method may be longer than 60 lines. If you have a method longer than that, try moving part of its functionality to another method and calling this second method in the original. You are expected to submit a <code>Interpreter.java</code> that contains no <code>checkstyle</code> <em>errors</em>.</p>
+<p>It is ok to have <code>checkstyle</code> warnings in your submitted code, though I encourage you to fix them if you have time. Avoiding these warnings will become part of your grade on future labs.</p>
+<h2 id="grading">Grading</h2>
+<p>This lab will be graded out of 30 points as shown below. While most of the points for this lab are associated with specific test cases, partial credit can be earned for test cases that don’t pass. It it possible to earn a passing graded even if your submission does not pass any tests. Partial credit will be awarded based on evidence of a good-faith effort to implement the related features. Comments explaining your approach can help earn partial credit.</p>
+<table>
+<thead>
+<tr class="header">
+<th>Requirement</th>
+<th>Points</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>testPstack</code> passes</td>
+<td>4 points</td>
+</tr>
+<tr class="even">
+<td><code>testPop</code> passes</td>
+<td>4 points</td>
+</tr>
+<tr class="odd">
+<td><code>testArithemetic</code> passes</td>
+<td>4 points</td>
+</tr>
+<tr class="even">
+<td><code>testBoolean</code> passes</td>
+<td>4 points</td>
+</tr>
+<tr class="odd">
+<td><code>testDup</code> passes</td>
+<td>2 points</td>
+</tr>
+<tr class="even">
+<td><code>testExch</code> passes</td>
+<td>2 points</td>
+</tr>
+<tr class="odd">
+<td><code>testDef</code> passes</td>
+<td>2.5 points</td>
+</tr>
+<tr class="even">
+<td><code>testProc</code> passes</td>
+<td>1 point</td>
+</tr>
+<tr class="odd">
+<td><code>testCountTo10</code> passes</td>
+<td>0.5 points</td>
+</tr>
+<tr class="even">
+<td><code>testFib</code> passes</td>
+<td>0.5 points</td>
+</tr>
+<tr class="odd">
+<td><code>Interpreter.java</code> does not have any <code>checkstyle</code> errors</td>
+<td>3 points</td>
+</tr>
+<tr class="even">
+<td>Check-in post</td>
+<td>1.5 points</td>
+</tr>
+<tr class="odd">
+<td><code>Interpreter.java</code> compiles without warnings</td>
+<td>0.5 points</td>
+</tr>
+<tr class="even">
+<td>Correct submission format (a file named <code>Interpreter.java</code>)</td>
+<td>0.5 points</td>
+</tr>
+</tbody>
+</table>
+<section class="footnotes" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1" role="doc-endnote"><p>Adapted from Laboratory 10.5 in <em>Java Structures</em>, Duane Bailey<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+</body>
+</html>

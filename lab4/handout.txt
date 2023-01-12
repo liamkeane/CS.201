@@ -1,0 +1,2 @@
+handout for boggle word finder lab
+https://cs.carleton.edu/faculty/awb/cs201/w22/lab4.html

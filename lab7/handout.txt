@@ -1,0 +1,2 @@
+handout for exam scheduling lab
+https://cs.carleton.edu/faculty/awb/cs201/w22/lab7.html
