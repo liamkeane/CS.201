@@ -29,6 +29,7 @@ public class BoggleSolver {
 	}
 
     // this method recursively searches for words beginning at the location row, col
+    // To Statement: 
     private void getAllValidWordsHelper(BoggleBoard board, Set<String> words, 
                                         String wordSoFar, int row, int col) {
         board.visit(row, col);
@@ -61,6 +62,12 @@ public class BoggleSolver {
     }
 
     // returns a set of words that can be made on board
+    
+    // TO Statement(s):
+    // Takes a 'board' in as input, creates a new hashset, creates a new empty string, calls Helper method on each
+    // tile of the board
+    // Levels of abstraction: ~2
+    // 
 	public Set<String> getAllValidWords(BoggleBoard board) {
         Set<String> words = new HashSet<String>();
 
